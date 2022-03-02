@@ -76,6 +76,69 @@ cursos = ('backend', 'frontend', 1 , True)
 
 print(cursos)
 print(cursos[0])
-print(cursos[0:1])
-cursos.append('otra cosa')
+# desde la pos. 0 hasta < 2
+print(cursos[0:2])
+# cursos.append('otra cosa')
+
 # cursos[0] = 'mobile design'
+# en la tupla solamente no podremos alterar los valores pertenencientes a ella PERO si dentro de esta hay una lista u otra coleccion de datos que si se puede modificar entonces si podremos alterar esta sub coleccion sin problemas
+variada = (1,2,3, [4,5,6])
+
+variada[3][0]='Hola'
+
+print(variada)
+
+print( '2' in variada)
+# creamos una nueva lista a raiz de una tupla llamando a la clase list en la cual en el constructor de esa clase le pasos los valos que contendra la nueva lista
+variada_lista = list(variada)
+# no se puede crear una lista a raiz de otra lista eso lanzara un error, solo se puede crear una lista mediante su constructor mediante una tupla
+list((1,2,3)) # [1,2,3]
+
+print(variada_lista)
+
+# para ver la cantidad de elementos que conforman una tupla o una lista
+# NOTA: la longitud siempre sera la cantidad de elementos y esta siempre empezara en 1 mientras que la posicion siempre empezara en 0, es por eso que siempre longitud = posicion + 1
+print(len(variada))
+
+
+# Conjuntos ( Set )
+# Coleccion de datos DESORDENADA, una vez que se crea ya no se acceder a las posiciones de sus elementos
+estaciones = {'Verano', 'Otonio', 'Primavera', 'Invierno'}
+# una vez que se crea se asigna una posicion aleatoria pero no cambia cada vez que se manda a llamar a este conjunto
+print('Invierno' in estaciones)
+# se agrega de forma aleatoria
+estaciones.add('Otro')
+
+# al ser desordena al momento de retirar el ultimo elemento este sera completamente aleatorio y retirara el ultimo elemento agregado de forma aleatoria
+# pop() > quita el ultimo elemento de la coleccion de datos (list, tuples, set)
+estacion = estaciones.pop()
+print(estacion)
+
+# Diccionarios
+# una coleccion de datos DESORDENADA pero cada elemento obedece a una llave definida
+persona={
+    'nombre': 'Eduardo',
+    'apellido': 'De Rivero',
+    'correo': 'ederiveroman@gmail.com'
+}
+# hacemos la busqueda de una determinada llave y si no la encuentra nos retornara opcionalmente None
+print(persona.get('apellido', 'No hay no existe'))
+# print(persona['apellidos'])
+
+# devuelve todas las llaves de mi diccionario
+print(persona.keys())
+
+# devuelve todas los contenidos de mi diccionario
+print(persona.values())
+
+# devuelve todas las llaves y su contenido en forma de tuplas dentro de una lista
+print(persona.items())
+
+# si definimos una llave que no existe, la creara, caso contrario modificara su valor
+persona['edad'] = 28
+# NOTA: si la llave no es exactamente igual creara una nueva (tiene que coincidir minus y mayus)
+persona['Nombre']='Ximena'
+print(persona)
+
+# eliminar una llave de un diccionario
+persona.pop('apellido')
