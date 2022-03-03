@@ -93,3 +93,70 @@ def ingresarProducto(**kwargs):
 
 ingresarProducto(nombre='Manzana', precio=2.40, estado=True, pais_procedencia='Peru')
 ingresarProducto(tamanio='Grande', cantidad= 100, nombre= 'Pera de agua')
+
+# recursividad
+# es utilizar la funcion dentro de la misma funcion
+
+def saludar_n_veces(limite):
+    if(limite == 0):
+        return 'Llege al limite'
+    print('saludar')
+    return saludar_n_veces(limite-1)
+
+resultado = saludar_n_veces(10)
+
+print(resultado)
+
+# 5! = 5 * 4 * 3 * 2 * 1 = 120
+
+def factorial(limite):
+    if limite == 0:
+        return 1
+    
+    return limite * factorial(limite - 1)
+
+
+resultado = factorial(3)
+print(resultado)
+# ventajas:
+# * hace el codigo mas limpio y sin mucha duplicidad del mismo
+# * una tarea compleja se puede dividir en si misma de una manera mas facil y sencilla
+# * la generacion de subsecuencias es mas facil con la recursividad que con alguna iteracion anidada (while)
+
+# desventajas:
+# * a veces la logica para genera una funcion recursiva es dificil de seguir
+# * las llamas recursivas son mas costosas ya que ocupan mas memoria por el simple echo de volver a llamar a toda la funcion de nuevo dentro de si misma y obviamente esto generara un mayor tiempo de respuesta
+# * las funciones recursivas son dificiles de hace depuracion (seguimiento al codigo linea x linea)
+
+# Operador ternarios
+# son condicionales que se pueden realizar en una sola linea de codigo solamente se puede retornar un valor o varios valores pero en una sola linea, no se puede hacer validaciones adicionales a la principal
+nombre_persona = 'Maria'
+origen_persona = 'arequipa'
+
+def duda(nombre_persona, origen_persona):
+    if nombre_persona == 'Maria' and origen_persona == 'arequipa':
+        return 'Me caso'
+    else:
+        return 'Next'
+
+resultado =  'Me caso'  if nombre_persona == 'Maria' and origen_persona == 'arequipa' else 'Next'
+
+resultado2= duda('Maria', 'arequipa')
+
+print(resultado)
+print(resultado2)
+
+# lambda function
+# son funciones que puede tener un numero indeterminado de argumentos pero solamente una expresion (una sola linea de ejecucion de codigo) ademas esta sera retornada
+
+cuadrado = lambda numero: numero ** 2
+sacar_igv = lambda precio: precio * 0.18  # / 1.18
+
+rpta = cuadrado(4)
+
+precio_sin_igv = sacar_igv(100)
+print(rpta)
+print(precio_sin_igv)
+
+precio_sin_igv = sacar_igv(50)
+print(precio_sin_igv)
