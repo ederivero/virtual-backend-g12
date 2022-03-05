@@ -1,0 +1,21 @@
+Para activar el entorno:
+* Para Windows con gitbash:
+$ source nombre_entorno/Scripts/activate
+
+* Para Windows con Powershell o CMD:
+$ nombre_entorno/Scripts/activate
+
+* Para Mac o Linux: 
+$ source nombre_entorno/bin/activate
+
+Para desactivar el entorno:
+$ deactivate
+
+Para listar las librerias:
+$ pip list
+
+Para instalar una libreria:
+$ pip install nombre_package
+
+Para desinstalar una libreria:
+$ pip uninstall nombre_package
