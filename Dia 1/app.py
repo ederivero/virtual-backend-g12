@@ -1,6 +1,6 @@
 from flask import Flask, request
 from datetime import datetime
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 # si solamente mandamos a llamar a la clase y le pasamos la instancia de la clase Flask creara los permisos para que todos puedan acceder (Allowed-Origin), para que cualquier metodo pueda ser consultado (Allowed-Method) y para cualquier header (Allowed-Header)
@@ -43,6 +43,8 @@ def estado():
     }
 
 @app.route("/clientes", methods=['POST', 'GET'])
+# para modificar las reglas globales de la aplicacion (CORS) y que solamente se respeten estas nuevas reglas en este endpoint con sus metodos correspondientes
+@cross_origin(origins=['http://127.0.0.1:7000', 'http://mipagina.com'])
 def obtener_clientes():
     # solamente puede ser llamado en cada controlador (funcion que se ejecutara cuando se realice una peticion desde el front)
     print(request.method)
@@ -74,12 +76,12 @@ def obtener_clientes():
 def gestion_usuario(id):
     print(id)
     if request.method == 'GET':
-        usuario = buscar_usuario(id)
-        if usuario:
-            return usuario[0]
+        cliente = buscar_usuario(id)
+        if cliente:
+            return cliente[0]
         else:
             return {
-                'message': 'el usuario a buscar no se encontro'
+                'message': 'el cliente a buscar no se encontro'
             }, 404
 
     elif request.method == 'PUT':
