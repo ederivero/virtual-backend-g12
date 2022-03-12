@@ -52,5 +52,15 @@ def generar_niveles():
             # print('Ubicacion', ubicaciones[pos_ubicacion])
             print(sql)
 
+def generar_niveles_alumnos():
+    # generar un numero aleatorio que sera el id del alumno y el id del nivel y un anio de manera en la cual no se puede volver a generar ese mismo alumno con un nivel inferior pero con un anio superior
+    # ALUMNO_ID    NIVEL_ID    YEAR
+    #     1            3        2000   // 3 > segundo A 
+    #     1            1        1999   // 1 > primero A ✔️
+    #     1            1        2002   // 1 > primero A ❌
+    # en total tiene que haber unos 80 registros
+    
+    pass
+
 
 generar_niveles()
