@@ -1,5 +1,5 @@
 from flask_restful import Resource, request
-
+from models.ingredientes import Ingrediente
 # todos los metodos HTTP que vamos a utilizar se definen como metodos de la clase
 class IngredientesController(Resource):
     def get(self):
