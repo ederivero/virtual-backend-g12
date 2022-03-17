@@ -2,7 +2,8 @@ from flask_restful import Resource, request
 from config import conexion
 from models.ingredientes import Ingrediente
 from dtos.dto_prueba import ValidadorPrueba, ValidarUsuarioPrueba
-from dtos.ingrediente_dto import IngredienteRequestDTO
+from dtos.ingrediente_dto import IngredienteRequestDTO, IngredienteResponseDTO
+from marshmallow.exceptions import ValidationError
 
 # todos los metodos HTTP que vamos a utilizar se definen como metodos de la clase
 class IngredientesController(Resource):
@@ -10,12 +11,11 @@ class IngredientesController(Resource):
         # vamos a crear una sesion en la cual ejecutaremos una query
         resultado = conexion.session.query(Ingrediente).all()
         print(resultado)
+        # si nosotros queremos convertir la informacion pero es mas de una colocar many=True y con esto el DTO lo que hara sera iterar cada una de los items y lo serializara al valor correcto
+        ingredientesSerializados = IngredienteResponseDTO(many=True).dump(resultado)
         return {
             'message':'Yo soy el get de los ingredientes',
-            'content': {
-                'id': resultado[0].id,
-                'nombre': resultado[0].nombre
-            }
+            'content': ingredientesSerializados
         }
 
     def post(self):
@@ -24,8 +24,8 @@ class IngredientesController(Resource):
         data = request.get_json()
         # registramos un nuevo ingrediente
         try:
-            # Validara que la data que el usuario me esta enviando cumpla con todos las caracteristicas de mi modelo (que sea un string, que no sea muy largo (mas de 45) )
             data_serializada = IngredienteRequestDTO().load(data)
+            # Validara que la data que el usuario me esta enviando cumpla con todos las caracteristicas de mi modelo (que sea un string, que no sea muy largo (mas de 45) )
             print(data_serializada)
             nuevoIngrediente = Ingrediente()
             nuevoIngrediente.nombre = data_serializada.get('nombre')
@@ -34,19 +34,28 @@ class IngredientesController(Resource):
             # add >  estamos creando una nueva transaccion
             # commit > sirve para guardar los cambios de manera permanente en la bd
             conexion.session.commit()
+            ingredienteSerializado = IngredienteResponseDTO().dump(nuevoIngrediente)
 
             return {
-                'message': 'Ingrediente creado exitosamente'
-            }
+                'message': 'Ingrediente creado exitosamente',
+                'ingrediente': ingredienteSerializado
+            }, 201 # created ( creado )
+            
+        except ValidationError as e:
+            return {
+                'message': 'La informacion es incorrecta',
+                'content': e.args
+            }, 400 # Bad request ( mala solicitud )
 
         except Exception as e:
+            
             print(e.args[0])
             # si hubo algun error al momento de hacer alguna modificacion a la bd entonces 'retrocederemos' todas esas modificaciones y lo dejaremos sin ningun cambio
             conexion.session.rollback()
             return {
                 'message': 'Hubo un error al crear el ingrediente, el ingrediente ya existe',
                 'content': e.args[0]
-            }
+            }, 500 # internal server error (error interno del servidor)
 
 class PruebaController(Resource):
 
