@@ -12,4 +12,5 @@ class Ingrediente(conexion.Model):
     id = Column(type_=types.Integer, primary_key=True, autoincrement=True)
     nombre= Column(type_=types.String(length=45), nullable=False, unique=True)
 
+    # indicara cual es el nombre de la tabla en la base de datos, si no le ponemos o no definimos este atributo entonces sera el nombre de la clase
     __tablename__ = 'ingredientes'
