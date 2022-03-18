@@ -114,12 +114,28 @@ class IngredienteController(Resource):
     
     def put(self, id):
         ingrediente = conexion.session.query(Ingrediente).filter_by(id=id).first()
-        if ingrediente:
-            body = request.get_json()
-            # validamos la data enviada por el usuario para que cumpla con lo definido en el DTO
-            data_validada = IngredienteRequestDTO().load(body)
-            # al ya validar nuestro ingrediente y que este exista procedemos a modificar sus columnas (solo seria nombre) con el nuevo valor enviado por el usuario previamente ya validado
-            ingrediente.nombre = data_validada.get('nombre')
-            # solamente hacemos un commit ya que no estamos agregando nuevos valores a la base de datos 
-            conexion.session.commit()
-        
+        try:
+            if ingrediente:
+                body = request.get_json()
+                # validamos la data enviada por el usuario para que cumpla con lo definido en el DTO
+                data_validada = IngredienteRequestDTO().load(body)
+                # al ya validar nuestro ingrediente y que este exista procedemos a modificar sus columnas (solo seria nombre) con el nuevo valor enviado por el usuario previamente ya validado
+                ingrediente.nombre = data_validada.get('nombre')
+                # solamente hacemos un commit ya que no estamos agregando nuevos valores a la base de datos 
+                conexion.session.commit()
+                # Usando el DTO de response pasar el ingrediente y que me devuelva su informacion para agregarla en el content de la respuesta
+                resultado = IngredienteResponseDTO().dump(ingrediente)
+                return {
+                    'message': 'Ingrediente actualizado exitosamente',
+                    'content': resultado
+                }
+            # que pasa si el ingrediente no existe O si la data es incorrecta ? solucionar esos errores
+            else:
+                return {
+                    'message': 'Ingrediente a actualizar no existe'
+                }, 404
+        except Exception as e:
+            return {
+                'message': 'Error al actualizar el ingrediente',
+                'content': e.args
+            }, 400
