@@ -4,6 +4,7 @@ from flask_restful import Api
 from controllers.ingredientes import (  IngredientesController, 
                                         PruebaController, 
                                         IngredienteController )
+from controllers.recetas import RecetasController
 from config import conexion, validador
 
 app = Flask(__name__)
@@ -49,10 +50,7 @@ def inicio():
 api.add_resource(IngredientesController, '/ingredientes', '/ingrediente')
 api.add_resource(PruebaController, '/pruebas')
 api.add_resource(IngredienteController, '/ingrediente/<int:id>')
-
+api.add_resource(RecetasController, '/recetas', '/receta')
 # comprobara que la instancia de la clase Flask se este ejecutando en el archivo principal del proyecto, esto se usa para no crear multiples instancias y generar un posible error de Flask 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-print('hola')
