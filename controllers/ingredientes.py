@@ -93,3 +93,33 @@ class PruebaController(Resource):
             'resultado': resultado
         }
 
+class IngredienteController(Resource):
+    def get(self, id):
+        # filter_by > tenemos que indicar dentro de ese metodo las columnas que queremos usar para hacer el filtro con su respectivo valor
+        # el parametro sera el nombre del atributo definido en el modelo y el segundo sera el valor
+        # SELECT TOP 1 * FROM ingredientes WHERE id= $id
+        ingrediente = conexion.session.query(Ingrediente).filter_by(id=id).first()
+        print(ingrediente)
+
+        if ingrediente:
+            # mando a llamar a mi DTO de respuesta del ingrediente
+            resultado = IngredienteResponseDTO().dump(ingrediente)
+            return {
+                'result': resultado
+            }
+        else:
+            return {
+                'message': 'El ingrediente a buscar no existe'
+            }, 404
+    
+    def put(self, id):
+        ingrediente = conexion.session.query(Ingrediente).filter_by(id=id).first()
+        if ingrediente:
+            body = request.get_json()
+            # validamos la data enviada por el usuario para que cumpla con lo definido en el DTO
+            data_validada = IngredienteRequestDTO().load(body)
+            # al ya validar nuestro ingrediente y que este exista procedemos a modificar sus columnas (solo seria nombre) con el nuevo valor enviado por el usuario previamente ya validado
+            ingrediente.nombre = data_validada.get('nombre')
+            # solamente hacemos un commit ya que no estamos agregando nuevos valores a la base de datos 
+            conexion.session.commit()
+        
