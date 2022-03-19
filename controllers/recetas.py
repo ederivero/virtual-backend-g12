@@ -1,8 +1,9 @@
 from flask_restful import Resource, request
 from models.recetas import Receta
 from dtos.receta_dto import RecetaRequestDTO, RecetaResponseDTO, BuscarRecetaRequestDto
+from dtos.paginacion_dto import PaginacionRequestDTO
 from config import conexion
-
+from math import ceil
 # CREATE, GET ALL (PAGINATED), UPDATE, FIND por like de nombre, DELETE
 class RecetasController(Resource):
     def post(self):
@@ -38,10 +39,31 @@ class RecetasController(Resource):
     
     def get(self):
         # TODO: agregar paginacion
-        recetas = conexion.session.query(Receta).all()
+        # page > que pagina queremos
+        # perPage
+        query_params = request.args
+        paginacion = PaginacionRequestDTO().load(query_params)
+        perPage = paginacion.get('perPage')
+        page= paginacion.get('page')
+        skip = perPage * (page - 1)
+        # page = 2 | perPage = 5
+        recetas = conexion.session.query(Receta).limit(perPage).offset(skip).all()
+        # SELECT COUNT(*) FROM recetas; > me da el total de registros que tengo en esa tabla
+        total = conexion.session.query(Receta).count()
+        # indica cuantos elementos por pagina vamos a tener, en el caso que se pida mas de lo que tengamos sera su valor total caso contrario sera el valor que se solicita
+        itemsXPage= perPage if total >= perPage else total
+        totalPages = ceil(total / itemsXPage) if itemsXPage > 0 else None
+
+
         respuesta = RecetaResponseDTO(many=True).dump(recetas)
+
         return {
             'message': 'Las recetas son:',
+            'pagination':{
+                'total': total,
+                'itemsXPage':itemsXPage,
+                'totalPage': totalPages
+            },
             'content': respuesta
         }
 
