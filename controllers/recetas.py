@@ -107,3 +107,10 @@ class BuscarRecetaController(Resource):
                 'message': 'Error al hacer la busqueda',
                 'content': e.args
             }, 400
+
+
+class RecetaController(Resource):
+    def get(self, id):
+        return {
+            'id': id
+        }

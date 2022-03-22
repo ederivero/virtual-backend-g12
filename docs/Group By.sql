@@ -1,4 +1,4 @@
-SELECT * FROM recetas LIMIT 50 OFFSET 5;
+SELECT * FROM recetas LIMIT 1 OFFSET 5;
 -- COUNT > contara todos los items de una tabla indicando que 
 -- columna se desea usar como contador
 SELECT COUNT(*) FROM recetas;
