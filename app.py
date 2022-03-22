@@ -5,6 +5,7 @@ from controllers.ingredientes import (  IngredientesController,
                                         PruebaController, 
                                         IngredienteController )
 from controllers.recetas import RecetasController, BuscarRecetaController
+from controllers.preparaciones import PreparacionesController
 from config import conexion, validador
 
 app = Flask(__name__)
@@ -52,6 +53,8 @@ api.add_resource(PruebaController, '/pruebas')
 api.add_resource(IngredienteController, '/ingrediente/<int:id>')
 api.add_resource(RecetasController, '/recetas', '/receta')
 api.add_resource(BuscarRecetaController, '/buscar_receta')
+api.add_resource(PreparacionesController, '/preparacion')
+
 # comprobara que la instancia de la clase Flask se este ejecutando en el archivo principal del proyecto, esto se usa para no crear multiples instancias y generar un posible error de Flask 
 if __name__ == '__main__':
     app.run(debug=True)

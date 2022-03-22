@@ -45,6 +45,12 @@ class RecetasController(Resource):
         paginacion = PaginacionRequestDTO().load(query_params)
         perPage = paginacion.get('perPage')
         page= paginacion.get('page')
+
+        if(perPage < 1 or page < 1):
+            return {
+                'message': 'Los parametros no pueden recibir valores negativos'
+            }, 400
+
         skip = perPage * (page - 1)
         # page = 2 | perPage = 5
         recetas = conexion.session.query(Receta).limit(perPage).offset(skip).all()
