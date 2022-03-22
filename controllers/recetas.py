@@ -51,10 +51,12 @@ class RecetasController(Resource):
         # SELECT COUNT(*) FROM recetas; > me da el total de registros que tengo en esa tabla
         total = conexion.session.query(Receta).count()
         # indica cuantos elementos por pagina vamos a tener, en el caso que se pida mas de lo que tengamos sera su valor total caso contrario sera el valor que se solicita
-        itemsXPage= perPage if total >= perPage else total
+        # Helper de paginacion 
+        itemsXPage = perPage if total >= perPage else total
         totalPages = ceil(total / itemsXPage) if itemsXPage > 0 else None
-
-
+        prevPage = page - 1 if page > 1 and page <= totalPages else None
+        nextPage = page + 1 if totalPages > 1 and page < totalPages else None
+        
         respuesta = RecetaResponseDTO(many=True).dump(recetas)
 
         return {
@@ -62,7 +64,9 @@ class RecetasController(Resource):
             'pagination':{
                 'total': total,
                 'itemsXPage':itemsXPage,
-                'totalPage': totalPages
+                'totalPages': totalPages,
+                'prevPage': prevPage,
+                'nextPage': nextPage
             },
             'content': respuesta
         }
