@@ -1,9 +1,13 @@
 from flask_restful import Resource, request
 from models.recetas import Receta
-from dtos.receta_dto import RecetaRequestDTO, RecetaResponseDTO, BuscarRecetaRequestDto
+from dtos.receta_dto import (   RecetaRequestDTO, 
+                                RecetaResponseDTO, 
+                                BuscarRecetaRequestDto,
+                                RecetaPreparacionesResponseDTO)
 from dtos.paginacion_dto import PaginacionRequestDTO
 from config import conexion
 from math import ceil
+
 # CREATE, GET ALL (PAGINATED), UPDATE, FIND por like de nombre, DELETE
 class RecetasController(Resource):
     def post(self):
@@ -111,6 +115,20 @@ class BuscarRecetaController(Resource):
 
 class RecetaController(Resource):
     def get(self, id):
-        return {
-            'id': id
-        }
+        # buscar la receta segun su id
+        # https://docs.sqlalchemy.org/en/14/orm/query.html?highlight=filter_by#sqlalchemy.orm.Query.filter
+        receta: Receta | None = conexion.session.query(Receta).filter(Receta.id == id).first()
+        # si no hay la receta devolver un message: 'Receta no encontrada' con un estado NOT FOUND
+        if receta is None:
+
+            return{
+                'message': 'Receta no encontrada'
+            }, 404
+        # si hay la receta devolver message : 'Receta encontrada' con un estado OK
+        else:
+            print(receta.preparaciones)
+            respuesta = RecetaPreparacionesResponseDTO().dump(receta)
+            return {
+                'message': 'Receta encontrada',
+                'content': respuesta
+            }, 200
