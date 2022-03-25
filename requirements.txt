@@ -1,3 +1,0 @@
-# Lo que hace el -r dentro del archivo es que jalara el listado de las librerias de mi otro archivo
--r requirements-dev.txt
-gunicorn==20.1.0
