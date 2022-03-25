@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Hola bienvenido a mi API de Monedero by CodiGo</p>
+    <p>Presentado por {{ nombre }} {{ edad }}</p>
+    <p>Los galacticos son:</p>
+    {# Jinja > en una libreria que sirve para renderizar html's en el backend
+    como en flask, django, rapify #} {#
+    https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-control-structures
+    #}
+    <ol>
+      {% for integrante in integrantes %}
+      <li>{{ integrante }}</li>
+      {% endfor %}
+    </ol>
+    {{ integrantes }}
+    {# En jinja podemos usar los diccionarios como si fueran JSON's en JS
+    (diccionario.llave) , si no existe esa propiedad no mostrara nada pero no
+    lanzara error #}
+    <p>El usuario es {{ usuario.nombre }}</p>
+
+    {# listar las selecciones de futbol en forma de una tabla #}
+    <table border="10">
+      <tr>
+        <th>seleccion</th>
+        <th>clasificado</th>
+      </tr>
+      {% for seleccion in selecciones %}
+      <tr>
+        <td>
+          {{ seleccion.nombre }}
+        </td>
+        <td>
+          {% if seleccion.clasificado is true %} 
+          'Nos vemos en Qatar' 
+          {% elif seleccion.clasificado is false %} 
+          'Con suerte en el proximo' 
+          {% else%}
+          'Aun no se sabe' 
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
