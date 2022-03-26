@@ -1,1 +1,3 @@
 entorno_auth/
+.env
+__pycache__/
