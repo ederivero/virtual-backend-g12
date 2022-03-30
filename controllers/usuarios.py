@@ -57,7 +57,8 @@ class ResetPasswordController(Resource):
                 Usuario).filter_by(correo=data.get('correo')).first()
             if usuarioEncontrado is not None:
                 # tengo que utilizar los correos verificados en sendgrid ya que si uso uno que no esta verificado entonces el correo nunca llegara
-                from_email = Email('ederiveroman@outlook.com')
+                print(usuarioEncontrado.correo)
+                from_email = Email('ederiveroman@gmail.com')
                 to_email = To(usuarioEncontrado.correo)
                 subject = 'Reinicia tu contraseña del Monedero App'
                 content = Content(
