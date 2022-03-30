@@ -1,7 +1,9 @@
 from flask import Flask, render_template
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_restful import Api
-from controllers.usuarios import LoginController, RegistroController
+from controllers.usuarios import (LoginController,
+                                  RegistroController,
+                                  ResetPasswordController)
 from config import validador, conexion
 from os import environ
 from dotenv import load_dotenv
@@ -92,6 +94,7 @@ def perfil_usuario():
 api.add_resource(RegistroController, '/registro')
 api.add_resource(LoginController, '/login')
 api.add_resource(MovimientoController, '/movimiento', '/movimientos')
+api.add_resource(ResetPasswordController, '/reset-password')
 
 if(__name__ == '__main__'):
     app.run(debug=True, port=8080)
