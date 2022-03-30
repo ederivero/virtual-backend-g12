@@ -9,6 +9,8 @@ from flask_cors import CORS
 from dtos.registro_dto import UsuarioResponseDTO
 from seguridad import autenticador, identificador
 from datetime import timedelta
+from seed import categoriaSeed
+from controllers.movimientos import MovimientoController
 
 load_dotenv()
 
@@ -16,7 +18,7 @@ app = Flask(__name__)
 
 CORS(app=app)
 
-app.config['SECRET_KEY'] = 'secreto'
+app.config['SECRET_KEY'] = environ.get('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 # para cambiar el endpoint de mi JWT
 app.config['JWT_AUTH_URL_RULE'] = '/login-jwt'
@@ -37,6 +39,13 @@ validador.init_app(app)
 conexion.init_app(app)
 
 conexion.create_all(app=app)
+
+
+# ingresara antes de hacer el primer request a nuestra funcion, toda la logica que queramos que se haga antes de la primea solicitud la deberemos de colocar aqui
+@app.before_first_request
+def seed():
+    # Ahora hacemos el seed de las tablas respectivas
+    categoriaSeed()
 
 
 @app.route('/')
@@ -82,6 +91,7 @@ def perfil_usuario():
 
 api.add_resource(RegistroController, '/registro')
 api.add_resource(LoginController, '/login')
+api.add_resource(MovimientoController, '/movimiento', '/movimientos')
 
 if(__name__ == '__main__'):
     app.run(debug=True, port=8080)
