@@ -7,6 +7,7 @@ from smtplib import SMTP
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from os import environ
+# from template import forgot_password
 # from sendgrid.helpers.mail import Email, To, Content, Mail
 
 
@@ -69,26 +70,9 @@ class ResetPasswordController(Resource):
                 # texto = "Hola, este es un mensaje de prueba."
                 mensaje['Subject'] = 'Reiniciar contraseña Monedero APP'
                 # si queremos un generador de correos con diseño : https://beefree.io/
-                html = '''
-                <html>
-                    <body>
-                        <p>
-                            Hola {}, has solicitado el reinicio de tu contraseña de tu cuenta {} ?
-                        </p>
-                        <p style="color: #ababab;">
-                            Si has sido tu, entonces dale click al siguiente enlace: 
-                            <b> <a href="{}/reset-password">link</a> </b> 
-                        </p>
-                        <p>
-                            Si no has sido tu entonces has caso omiso a este mensaje.
-                        </p>
-                        <br>
-                        <h3>
-                            Por favor no responder a este mensaje ya que es automatico.
-                        </h3>
-                    </body>
-                </html>
-                '''.format(usuarioEncontrado.nombre, usuarioEncontrado.correo, environ.get('URL_FRONT'))
+                html = open('./email_templates/joshua_template.html').read().format(
+                    usuarioEncontrado.nombre, usuarioEncontrado.correo, environ.get('URL_FRONT'))
+
                 # siempre que queremos agregar un HTML como texto del mensaje tiene que ir despues del texto ya que primero tratara de enviar el ultimo y si no puede enviara el anterior
                 # mensaje.attach(MIMEText(texto, 'plain'))
                 mensaje.attach(MIMEText(html, 'html'))
