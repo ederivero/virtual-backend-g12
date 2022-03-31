@@ -10,3 +10,11 @@ export const login = (data: ILogin) => {
 export const register = (data: IRegister) => {
   return request.post("/registro", data);
 };
+
+export const validarTokenPasswordReset = (data: any) => {
+  return request.post("/validar-token", data);
+};
+
+export const chagePassword = (data: { password: string; token: string }) => {
+  return request.post("/change-password", data);
+};
