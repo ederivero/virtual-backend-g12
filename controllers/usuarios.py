@@ -71,7 +71,7 @@ class ResetPasswordController(Resource):
                 mensaje['Subject'] = 'Reiniciar contraseña Monedero APP'
                 # si queremos un generador de correos con diseño : https://beefree.io/
                 html = open('./email_templates/joshua_template.html').read().format(
-                    usuarioEncontrado.nombre, usuarioEncontrado.correo, environ.get('URL_FRONT'))
+                    usuarioEncontrado.nombre, environ.get('URL_FRONT')+'/reset-password')
 
                 # siempre que queremos agregar un HTML como texto del mensaje tiene que ir despues del texto ya que primero tratara de enviar el ultimo y si no puede enviara el anterior
                 # mensaje.attach(MIMEText(texto, 'plain'))
