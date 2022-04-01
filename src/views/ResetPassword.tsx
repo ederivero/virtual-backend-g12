@@ -12,6 +12,7 @@ export const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [valido, setValido] = useState(true);
+  const [correo, setCorreo] = useState("");
   const [passwords, setPasswords] = useState({
     password: "",
     validatePassword: "",
@@ -19,10 +20,20 @@ export const ResetPassword = () => {
 
   const validezToken = useCallback(async () => {
     if (token) {
-      //   await validarTokenPasswordReset({
-      //     token,
-      //   });
-      //   setValido(false);
+      try {
+        const { data } = await validarTokenPasswordReset({
+          token,
+        });
+        setCorreo(data.content.correo);
+        setValido(true);
+
+        console.log(data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.log(error.response?.data);
+          setValido(false);
+        }
+      }
     }
   }, [token]);
 
@@ -51,6 +62,10 @@ export const ResetPassword = () => {
 
   return token && valido ? (
     <div>
+      <p>
+        Hola <span style={{ color: "#893abd" }}>{correo}</span> ingresa tu nueva
+        contraseña:
+      </p>
       <form action="POST" onSubmit={cambiarPwd}>
         <label htmlFor=""></label>
         <input
