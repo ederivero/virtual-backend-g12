@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_restful import Api
 from controllers.usuarios import (LoginController,
@@ -9,10 +9,14 @@ from os import environ
 from dotenv import load_dotenv
 from flask_cors import CORS
 from dtos.registro_dto import UsuarioResponseDTO
+from models.usuarios import Usuario
 from seguridad import autenticador, identificador
 from datetime import timedelta
 from seed import categoriaSeed
 from controllers.movimientos import MovimientoController
+from cryptography.fernet import Fernet
+from datetime import datetime
+import json
 
 load_dotenv()
 
@@ -89,6 +93,54 @@ def perfil_usuario():
         'message': 'El usuario es',
         'content': usuario
     }
+
+
+@app.route('/validar-token', methods=['POST'])
+def validar_token():
+    # TODO: agregar el dto para solamente recibir la token en el body, la token tiene que ser un string
+    body = request.get_json()
+    token = body.get('token')
+    fernet = Fernet(environ.get('FERNET_SECRET_KEY'))
+    try:
+        # el metodo decrypt se usa para decifrar la token previamente encriptada si no se puede, se emitira un error que sera capturado por el except
+        #               token la conv a bytes - el resultado de bytes lo convierto a str
+        data = fernet.decrypt(bytes(token, 'utf-8')).decode('utf-8')
+        print(data)
+
+        diccionario = json.loads(data)
+        fecha_caducidad = datetime.strptime(diccionario.get(
+            'fecha_caducidad'), '%Y-%m-%d %H:%M:%S.%f')
+
+        hora_actual = datetime.now()
+        if hora_actual < fecha_caducidad:
+            # buscar ese usuario en la bd con ese id y retornar al front el nombre del usuario
+            # SELECT correo FROM usuarios WHERE id = ....;
+            # with_entities > indicara que columnas queremos de determinado modelo o modelos
+            # https://docs.sqlalchemy.org/en/14/orm/query.html?highlight=with_entities#sqlalchemy.orm.Query.with_entities
+            print(conexion.session.query(Usuario).with_entities(
+                Usuario.correo).filter_by(id=diccionario.get('id_usuario')))
+
+            usuarioEncontrado = conexion.session.query(Usuario).with_entities(
+                Usuario.correo).filter_by(id=diccionario.get('id_usuario')).first()
+            if usuarioEncontrado:
+                return {
+                    'message': 'Correcto',
+                    'content': {
+                        'correo': usuarioEncontrado.correo
+                    }
+                }
+            else:
+                return {
+                    'message': 'Usuario no existe'
+                }, 400
+        else:
+            return {
+                'message': 'La token caduco'
+            }, 400
+    except Exception as e:
+        return {
+            'message': 'Token incorrecta'
+        }, 400
 
 
 api.add_resource(RegistroController, '/registro')
