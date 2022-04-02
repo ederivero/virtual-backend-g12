@@ -51,3 +51,31 @@ class TestInicioFlask(unittest.TestCase):
         self.assertEqual(respuesta.json.get('access_token'), None)
         self.assertEqual(respuesta.json.get(
             'description'), 'Invalid credentials')
+
+
+# una clase por cada endpoint
+class TestYo(unittest.TestCase):
+    def setUp(self):
+        self.aplicacion_flask = app.test_client()
+        body = {
+            'correo': 'ederiveroman@gmail.com',
+            'pass': 'Welcome123!'
+        }
+        respuesta = self.aplicacion_flask.post('/login-jwt', json=body)
+        self.token = respuesta.json.get('access_token')
+
+    def testNoHayJWT(self):
+        # TODO: hacer este test con todas las suposiciones
+        pass
+
+    def testPerfil(self):
+        respuesta = self.aplicacion_flask.get(
+            '/yo', headers={'Authorization': 'Bearer {}'.format(self.token)})
+
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.json.get('message'), 'El usuario es')
+
+
+class TestMovimientos(unittest.TestCase):
+    # TODO: hacer los test para extraer los movimientos creados del usuario, hacer el caso cuando se pase una JWT, cuando no se pase una token, cuando no tenga movimientos y cuando tenga movimientos
+    pass

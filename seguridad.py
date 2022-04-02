@@ -11,12 +11,10 @@ def autenticador(username, password):
         usuarioEncontrado = conexion.session.query(
             Usuario).filter_by(correo=username).first()
         if usuarioEncontrado:
-            print('se encontro el usuario')
             # ahora valido si la password es la correcta
             validacion = checkpw(bytes(password, 'utf-8'),
                                  bytes(usuarioEncontrado.password, 'utf-8'))
             if validacion is True:
-                print('si es la contraseña')
                 # si todas las validaciones son correctas entonces deberemos de retornar una instancia con un atributo id
                 return usuarioEncontrado
             else:
@@ -32,7 +30,6 @@ def identificador(payload):
     # en el payload obtendremos la parte intermedia de la JWT que es la informacion que se puede visualizar sin la necesidad de saber la contraseña de la token
     # identity > la identificacion del usuario (por lo general viene a ser el ID o UUID del mismo)
     # SELECT * from USUARIOS where id = ...
-    print(payload)
     usuarioEncontrado: Usuario | None = conexion.session.query(
         Usuario).filter_by(id=payload['identity']).first()
     if usuarioEncontrado:

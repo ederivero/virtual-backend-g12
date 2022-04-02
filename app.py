@@ -95,7 +95,7 @@ def estado():
 @app.route('/yo')
 @jwt_required()
 def perfil_usuario():
-    print(current_identity)
+    # print(current_identity)
     # serializar el usuario (current identity)
     usuario = UsuarioResponseDTO().dump(current_identity)
     return {
