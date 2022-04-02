@@ -26,6 +26,7 @@ CORS(app=app)
 
 app.config['SECRET_KEY'] = environ.get('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # para cambiar el endpoint de mi JWT
 app.config['JWT_AUTH_URL_RULE'] = '/login-jwt'
 # para cambiar la llave para solicitar el username
@@ -80,6 +81,14 @@ def inicio():
         'nombre': 'Peru',
         'timado': True
     }])
+
+
+@app.route('/status')
+def estado():
+    return {
+        'status': True,
+        'hora_del_servidor':  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }, 200
 
 
 # al colocar jwt_required estamos indicando que para ese controlador se debera de proveer una JWT valida
