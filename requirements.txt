@@ -4,6 +4,7 @@ bcrypt==3.2.0
 cffi==1.15.0
 click==8.0.4
 colorama==0.4.4
+cryptography==36.0.2
 Flask==2.0.3
 Flask-Cors==3.0.10
 Flask-JWT==0.3.2
@@ -23,8 +24,11 @@ pycparser==2.21
 PyJWT==1.7.0
 pyparsing==3.0.7
 python-dotenv==0.20.0
+python-http-client==3.3.7
 pytz==2022.1
+sendgrid==6.9.7
 six==1.16.0
 SQLAlchemy==1.4.32
+starkbank-ecdsa==2.0.3
 toml==0.10.2
 Werkzeug==2.0.3
