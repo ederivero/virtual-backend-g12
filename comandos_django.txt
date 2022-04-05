@@ -1,0 +1,9 @@
+CLI > Interfaz de Linea de Comandos (Command Line Interface)
+Todos los comandos de django se realizan mediante el comando 'django-admin'
+django-admin startproject NOMBRE_PROYECTO > creara un nuevo proyecto con los archivos necesarios para django
+
+python manage.py runserver > levantar el proyecto en Django
+
+python manage.py showmigrations > mostrara todas las migraciones creadas en mi proyecto y las que no se han ejecutado entonces no estaran marcadas
+
+python manage.py migrate > ejecutara la migracion pendiente a la bd , adicional se puede colocar el nombre de la aplicacion para que solo se ejecute dicha migracion
