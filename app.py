@@ -8,6 +8,7 @@ from config import validador, conexion
 from os import environ
 from dotenv import load_dotenv
 from flask_cors import CORS
+from dtos.change_password_dto import ChangePasswordRequestDTO
 from dtos.registro_dto import UsuarioResponseDTO
 from models.usuarios import Usuario
 from seguridad import autenticador, identificador
@@ -149,6 +150,43 @@ def validar_token():
     except Exception as e:
         return {
             'message': 'Token incorrecta'
+        }, 400
+
+
+@app.route('/change-password-token', methods=['POST'])
+def post():
+    body = request.get_json()
+    try:
+        # primero valido la informacion entrante del body
+        data = ChangePasswordRequestDTO().load(body)
+        # uso Fernete para desencriptar la token
+        fernet = Fernet(environ.get('FERNET_SECRET_KEY'))
+        info_token = fernet.decrypt(
+            bytes(data.get('token'), 'utf-8')).decode('utf-8')
+
+        # convierto la token a un diccionario
+        diccionario = json.loads(info_token)
+        # busco el usuario en la BD
+        usuarioEncontrado = conexion.session.query(Usuario).filter_by(
+            id=diccionario.get('id_usuario')).first()
+        if usuarioEncontrado:
+            # procedo a cambiar la pwd
+            usuarioEncontrado.password = data.get('password')
+            usuarioEncontrado.encriptar_pwd()
+            conexion.session.add(usuarioEncontrado)
+            conexion.session.commit()
+            return {
+                'message': 'Contraseña cambiada exitosamente'
+            }
+        else:
+            return {
+                'message': 'Usuario no existe'
+            }, 404
+    except Exception as e:
+        conexion.session.rollback()
+        return {
+            'message': 'Error al cambiar la contraseña',
+            'content': e.args
         }, 400
 
 

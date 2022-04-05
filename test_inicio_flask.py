@@ -78,4 +78,29 @@ class TestYo(unittest.TestCase):
 
 class TestMovimientos(unittest.TestCase):
     # TODO: hacer los test para extraer los movimientos creados del usuario, hacer el caso cuando se pase una JWT, cuando no se pase una token, cuando no tenga movimientos y cuando tenga movimientos
-    pass
+    def setUp(self):
+        self.aplicacion_flask = app.test_client()
+        body = {
+            'correo': 'ederiveroman@gmail.com',
+            'pass': 'Welcome123!'
+        }
+        respuesta = self.aplicacion_flask.post('/login-jwt', json=body)
+        self.token = respuesta.json.get('access_token')
+
+    def testSiHay(self):
+        '''deberia retornar los movimientos del usuario'''
+        respuesta = self.aplicacion_flask.get(
+            '/movimientos', headers={'Authorization': 'Bearer {}'.format(self.token)})
+
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.json.get('message'), 'Los movimientos son')
+        self.assertNotEqual(respuesta.json.get('content')[0].get('id'), None)
+
+    def testNoToken(self):
+        '''deberia arrojar un error si la JWT no es proveida'''
+        respuesta = self.aplicacion_flask.get(
+            '/movimientos')
+        self.assertEqual(respuesta.status_code, 500)
+        print(respuesta.json)
+        self.assertEqual(respuesta.json.get('message'),
+                         'Internal Server Error')
