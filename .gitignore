@@ -1,3 +1,4 @@
 entorno_django/
 __pycache__/
+entorno_flask/
 .env

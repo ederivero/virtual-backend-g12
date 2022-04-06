@@ -7,3 +7,7 @@ python manage.py runserver > levantar el proyecto en Django
 python manage.py showmigrations > mostrara todas las migraciones creadas en mi proyecto y las que no se han ejecutado entonces no estaran marcadas
 
 python manage.py migrate > ejecutara la migracion pendiente a la bd , adicional se puede colocar el nombre de la aplicacion para que solo se ejecute dicha migracion
+
+python manage.py makemigrations NOMBRE_APP --name NOMBRE_MIGRACION > creara una nueva migracion de nuestra aplicacion con todos los cambios que se habran hecho en el ORM
+
+python manage.py sqlmigrate NOMBRE_APP NUMERO_MIGRACION > mostrara el SQL de la migracion creada

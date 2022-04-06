@@ -20,3 +20,28 @@ class Etiqueta(models.Model):
         # modificar el ordernamiento natural (por el id) e imponinendo el propio que sea ASC del nombre, solamente funcionara para cuando hagamos el get usando el ORM
         ordering = ['-nombre']
 
+
+class Tareas(models.Model):
+
+    class CategoriaOpciones(models.TextChoices):
+        # cada opcion le podemos pasar dos parametros en la cual el primero sera su abreviatura para que se guarde en la bd y el segundo el nombre completo
+        TODO = 'TODO', 'TO_DO'
+        IN_PROGRESS = 'IP', 'IN_PROGRESS'
+        DONE = 'DONE', 'DONE'
+        CANCELLED = 'CANCELLED', 'CANCELLED'
+
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=45, null=False)
+    # Forma 1 usando una subclase que herede de TextChoices
+    categoria = models.CharField(max_length=45, choices=CategoriaOpciones.choices, default=CategoriaOpciones.TODO)
+    
+    fechaCaducidad=
+    importancia=
+
+    # Forma 2 usando una lista de tuplas
+    # categoria = models.CharField(max_length=45, choices=[
+    #     ('TODO','TO_DO'), 
+    #     ('IP', 'IN_PROGRESS'),
+    #     ('DONE', 'DONE'),
+    #     ('CANCELLED', 'CANCELLED')
+    #     ], default='TODO')
