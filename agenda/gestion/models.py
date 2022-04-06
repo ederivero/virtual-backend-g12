@@ -42,8 +42,9 @@ class Tareas(models.Model):
     #     ('CANCELLED', 'CANCELLED')
     #     ], default='TODO')
 
-    fechaCaducidad= models.DateTimeField(db_column='fecha_caducidad')
-    importancia= models.IntegerField(null=False)
+    fechaCaducidad = models.DateTimeField(db_column='fecha_caducidad')
+    importancia = models.IntegerField(null=False)
+    descripcion = models.TextField()
 
     createdAt = models.DateTimeField(auto_now_add=True, db_column='created_at')
     updatedAt = models.DateTimeField(auto_now=True, db_column='updated_at')
