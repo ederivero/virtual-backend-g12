@@ -34,10 +34,6 @@ class Tareas(models.Model):
     nombre = models.CharField(max_length=45, null=False)
     # Forma 1 usando una subclase que herede de TextChoices
     categoria = models.CharField(max_length=45, choices=CategoriaOpciones.choices, default=CategoriaOpciones.TODO)
-    
-    fechaCaducidad=
-    importancia=
-
     # Forma 2 usando una lista de tuplas
     # categoria = models.CharField(max_length=45, choices=[
     #     ('TODO','TO_DO'), 
@@ -45,3 +41,21 @@ class Tareas(models.Model):
     #     ('DONE', 'DONE'),
     #     ('CANCELLED', 'CANCELLED')
     #     ], default='TODO')
+
+    fechaCaducidad= models.DateTimeField(db_column='fecha_caducidad')
+    importancia= models.IntegerField(null=False)
+
+    createdAt = models.DateTimeField(auto_now_add=True, db_column='created_at')
+    updatedAt = models.DateTimeField(auto_now=True, db_column='updated_at')
+
+    # En Django se puede utilizar las relaciones one-to-one, one-to-many o many-to-many para crear las relaciones entre las tablas, aca ya no es necesario usar las relationships porque ya estan integradas dentro de la relacion
+    etiquetas = models.ManyToManyField(to=Etiqueta, related_name='tareas')
+    class Meta:
+        db_table = 'tareas'
+
+# Si la tabla tareas_etiquetas no fuese una tabla pivote, detalle entonces tendria que crear la tabla como si fuese una tabla comun y corriente
+# class TareasEtiquetas(models.Model):
+#     ...
+#     etiquetaFK = models.ForeignKey(to=Etiqueta)
+#     tareaFK = models.ForeignKey(to=Tareas)
+#     # las demas columnas

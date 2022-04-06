@@ -11,3 +11,8 @@ python manage.py migrate > ejecutara la migracion pendiente a la bd , adicional 
 python manage.py makemigrations NOMBRE_APP --name NOMBRE_MIGRACION > creara una nueva migracion de nuestra aplicacion con todos los cambios que se habran hecho en el ORM
 
 python manage.py sqlmigrate NOMBRE_APP NUMERO_MIGRACION > mostrara el SQL de la migracion creada
+
+
+https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations
+NOTA:
+python manage.py migrate NOMBRE_APP NUMERO_MIGRACION > efectuar dicha migracion o se puede revertir hasta la migracion seleccionada (todas las migraciones efectuadas queden sin efecto) si queremos revetir absolutamente todas las migraciones podemos colocar en NUMERO_MIGRACION zero, LA TABLA DJANGO_MIGRATIONS NUNCA SE TOCA 
