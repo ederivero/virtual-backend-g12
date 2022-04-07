@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tareas
+from .models import Etiqueta, Tareas
 # https://www.django-rest-framework.org/api-guide/serializers/
 # https://www.django-rest-framework.org/api-guide/fields/
 
@@ -20,3 +20,9 @@ class TareaSerializer(serializers.ModelSerializer):
         fields = '__all__'  # estare indicando que voy a utilizar todos las columnas de mi tabla
         # exclude = ['importancia'] # indicara que columnas NO quiero utilizar
         # NOTA: no se puede utilizar los dos a la vez, es decir, o bien se usa el fields o el exclude
+
+
+class EtiquetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Etiqueta
+        fields = '__all__'

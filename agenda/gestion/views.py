@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.generics import ListAPIView, ListCreateAPIView
-from .serializers import PruebaSerializer, TareaSerializer
-from .models import Tareas
+from .serializers import PruebaSerializer, TareaSerializer, EtiquetaSerializer
+from .models import Etiqueta, Tareas
 
 
 @api_view(http_method_names=['GET', 'POST'])
@@ -60,3 +60,8 @@ class PruebaApiView(ListAPIView):
 class TareasApiView(ListCreateAPIView):
     queryset = Tareas.objects.all()  # SELECT * FROM tareas;
     serializer_class = TareaSerializer
+
+
+class EtiquetasApiView(ListCreateAPIView):
+    queryset = Etiqueta.objects.all()
+    serializer_class = EtiquetaSerializer

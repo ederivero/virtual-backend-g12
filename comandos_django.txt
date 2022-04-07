@@ -12,6 +12,7 @@ python manage.py makemigrations NOMBRE_APP --name NOMBRE_MIGRACION > creara una 
 
 python manage.py sqlmigrate NOMBRE_APP NUMERO_MIGRACION > mostrara el SQL de la migracion creada
 
+python manage.py shell > inicial un Interfaz de comandos de python pero importando todas las librerias que utiliza django
 
 https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations
 NOTA:
