@@ -1,3 +1,4 @@
+# https://docs.djangoproject.com/en/3.2/ref/django-admin/
 CLI > Interfaz de Linea de Comandos (Command Line Interface)
 Todos los comandos de django se realizan mediante el comando 'django-admin'
 django-admin startproject NOMBRE_PROYECTO > creara un nuevo proyecto con los archivos necesarios para django
