@@ -1,8 +1,12 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.generics import ListAPIView, ListCreateAPIView
-from .serializers import PruebaSerializer, TareasSerializer, EtiquetaSerializer, TareaSerializer
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from .serializers import (PruebaSerializer,
+                          TareasSerializer,
+                          EtiquetaSerializer,
+                          TareaSerializer,
+                          TareaPersonalizableSerializer)
 from .models import Etiqueta, Tareas
 # https://www.django-rest-framework.org/api-guide/status-codes/#status-codes
 from rest_framework import status
@@ -87,8 +91,10 @@ class TareasApiView(ListCreateAPIView):
                 return Response(data={
                     'message': 'La fecha no puede ser menor que la fecha actual'
                 }, status=status.HTTP_400_BAD_REQUEST)
+            # El metodo save() se podra llamar siempre que el serializado sea un ModelSerializer y este servira para poder guardar la informacion actual del serializador en la bd
+            serializador.save()
 
-            return Response(data='', status=status.HTTP_201_CREATED)
+            return Response(data=serializador.data, status=status.HTTP_201_CREATED)
         else:
             # mostrara todos los errores que hicieron que el is_valid() no cumpla la condicion
             # serializador.errors
@@ -101,3 +107,8 @@ class TareasApiView(ListCreateAPIView):
 class EtiquetasApiView(ListCreateAPIView):
     queryset = Etiqueta.objects.all()
     serializer_class = EtiquetaSerializer
+
+
+class TareaApiView(RetrieveUpdateDestroyAPIView):
+    serializer_class = TareaSerializer  # TareaPersonalizableSerializer
+    queryset = Tareas.objects.all()
