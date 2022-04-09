@@ -81,3 +81,8 @@ class ArchivoSerializer(serializers.Serializer):
     # use_url > si es verdadero retornara el link completo de la ubicacion del archivo, caso contrario retornara solamente la ubicacion dentro del proyecto del archivo
 
     archivo = serializers.ImageField(max_length=100, use_url=True)
+
+
+# Crear un serializador en el cual reciba un nombre que sera un charfield cuya longitud maxima sea 100 caracteres
+class EliminarArchivoSerializer(serializers.Serializer):
+    archivo = serializers.CharField(max_length=100)

@@ -4,13 +4,15 @@ from rest_framework.request import Request
 from rest_framework.generics import (ListAPIView,
                                      ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView,
-                                     CreateAPIView)
+                                     CreateAPIView,
+                                     DestroyAPIView)
 from .serializers import (PruebaSerializer,
                           TareasSerializer,
                           EtiquetaSerializer,
                           TareaSerializer,
                           TareaPersonalizableSerializer,
-                          ArchivoSerializer)
+                          ArchivoSerializer,
+                          EliminarArchivoSerializer)
 from .models import Etiqueta, Tareas
 # https://www.django-rest-framework.org/api-guide/status-codes/#status-codes
 from rest_framework import status
@@ -19,6 +21,8 @@ from django.utils import timezone
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from os import remove
+from django.conf import settings
 
 
 @api_view(http_method_names=['GET', 'POST'])
@@ -164,3 +168,27 @@ class ArchivosApiView(CreateAPIView):
                 'message': 'Error al subir la imagen',
                 'content': data.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EliminarArchivoApiView(DestroyAPIView):
+    # el generico DestroyAPIView solicita una pk como parametro de la url para eliminar un determinado registro de un modelo pero se personalizara para no recibir ello
+    serializer_class = EliminarArchivoSerializer
+
+    def delete(self, request: Request):
+        data = self.serializer_class(data=request.data)
+        try:
+            data.is_valid(raise_exception=True)
+            ubicacion = data.validated_data.get('archivo')
+            # Eliminara el archivo ubicado en esa direccion
+            remove(settings.MEDIA_ROOT / ubicacion)
+
+            return Response(data={
+                'message': 'Archivo eliminado exitosamente',
+            })
+
+        except Exception as e:
+
+            return Response(data={
+                'message': 'Error al eliminar el archivo',
+                'content': e.args
+            }, status=status.HTTP_404_NOT_FOUND)
