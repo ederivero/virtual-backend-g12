@@ -139,7 +139,12 @@ class ArchivosApiView(CreateAPIView):
                 'imagenes/'+archivo.name, ContentFile(archivo.read()))
 
             print(resultado)
-            return Response(data={'message': 'archivo guardado exitosamente'}, status=status.HTTP_201_CREATED)
+            return Response(data={
+                'message': 'archivo guardado exitosamente',
+                'content': {
+                    'ubicacion': resultado
+                }
+            }, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
                 'message': 'Error al subir la imagen',

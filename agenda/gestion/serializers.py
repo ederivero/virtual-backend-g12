@@ -15,6 +15,9 @@ class PruebaSerializer(serializers.Serializer):
 
 # https://www.django-rest-framework.org/api-guide/serializers/#modelserializer
 class TareasSerializer(serializers.ModelSerializer):
+    # Modifico la configuracion del modelo y le puedo setear la nueva configuracion que respetera el serializador, no se puede hacer cambios de tipos de datos muy drasticos (x ejemplo: si en el modelo es un IntegerField en el serializador no podre cambiarlo a CharField porque me lanzara un error al momento de guardar la data)
+    foto = serializers.CharField(max_length=100)
+
     class Meta:
         model = Tareas
         fields = '__all__'  # estare indicando que voy a utilizar todos las columnas de mi tabla

@@ -81,12 +81,12 @@ WSGI_APPLICATION = 'agenda.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # postgresql | sqlite3 | oracle 
-        'NAME': environ.get('DATABASE_NAME'), # nombre de la bd
-        'USER': environ.get('DATABASE_USER'), # usuario del servidor
-        'PASSWORD': environ.get('DATABASE_PASSWORD'), # password del servidor
-        'PORT': '3306', # puerto del servidor
-        'HOST': environ.get('DATABASE_HOST') # host del servidor
+        'ENGINE': 'django.db.backends.mysql',  # postgresql | sqlite3 | oracle
+        'NAME': environ.get('DATABASE_NAME'),  # nombre de la bd
+        'USER': environ.get('DATABASE_USER'),  # usuario del servidor
+        'PASSWORD': environ.get('DATABASE_PASSWORD'),  # password del servidor
+        'PORT': '3306',  # puerto del servidor
+        'HOST': environ.get('DATABASE_HOST')  # host del servidor
     }
 }
 
@@ -116,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'es'
 
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-TIME_ZONE = 'America/Lima' # ZONA HORARIA 0 , PERU Se encuentra en UTC-05:00
+TIME_ZONE = 'America/Lima'  # ZONA HORARIA 0 , PERU Se encuentra en UTC-05:00
 
 USE_I18N = True
 
@@ -132,3 +132,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# sera la ruta por la cual se podra devolver todos los archivos multimedias de el proyecto
+MEDIA_URL = '/archivos/'
+
+# MEDIA > multimedia
+# sirve para ubicar de donde se extraeran los archivos solicitados por la url
+MEDIA_ROOT = BASE_DIR / 'imagenes'
