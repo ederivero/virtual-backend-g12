@@ -71,3 +71,10 @@ class TareaPersonalizableSerializer(serializers.ModelSerializer):
                 'read_only': True
             }
         }
+
+
+class ArchivoSerializer(serializers.Serializer):
+    # max_length > indica la longitud maxima DEL NOMBRE del archivo
+    # use_url > si es verdadero retornara el link completo de la ubicacion del archivo, caso contrario retornara solamente la ubicacion dentro del proyecto del archivo
+
+    archivo = serializers.ImageField(max_length=100, use_url=True)

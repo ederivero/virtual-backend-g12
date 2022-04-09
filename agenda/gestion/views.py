@@ -1,17 +1,24 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (ListAPIView,
+                                     ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView,
+                                     CreateAPIView)
 from .serializers import (PruebaSerializer,
                           TareasSerializer,
                           EtiquetaSerializer,
                           TareaSerializer,
-                          TareaPersonalizableSerializer)
+                          TareaPersonalizableSerializer,
+                          ArchivoSerializer)
 from .models import Etiqueta, Tareas
 # https://www.django-rest-framework.org/api-guide/status-codes/#status-codes
 from rest_framework import status
 # son un conjunto de librerias que django nos provee para poder utilizar de una manera mas rapida ciertas configuraciones, timezone sirve para, que en base a la configuracion que colocamos en el settings.py TIME_ZONE se basara en esta para darnos la hora y fecha con esa configuracion
 from django.utils import timezone
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
 @api_view(http_method_names=['GET', 'POST'])
@@ -112,3 +119,29 @@ class EtiquetasApiView(ListCreateAPIView):
 class TareaApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = TareaSerializer  # TareaPersonalizableSerializer
     queryset = Tareas.objects.all()
+
+
+class ArchivosApiView(CreateAPIView):
+    serializer_class = ArchivoSerializer
+
+    def post(self, request: Request):
+        # para ingresar a los archivos provenientes del form-data usamos el .FILES
+        print(request.FILES)
+        data = self.serializer_class(data=request.FILES)
+        if data.is_valid():
+            print(type(data.validated_data.get('archivo')))
+            # https://docs.djangoproject.com/es/4.0/_modules/django/core/files/uploadedfile/
+            archivo: InMemoryUploadedFile = data.validated_data.get('archivo')
+            print(archivo.name)
+            # https://docs.djangoproject.com/en/4.0/topics/files/#storage-objects
+            # el metodo read() sirve para leer el archivo PEEERO la lectura hara que tambien se elimine de la memoria temporal por ende no se puede llamar dos o mas veces a este metodo ya que la segunda ya no tendremos archivo que mostrar
+            resultado = default_storage.save(
+                'imagenes/'+archivo.name, ContentFile(archivo.read()))
+
+            print(resultado)
+            return Response(data={'message': 'archivo guardado exitosamente'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'message': 'Error al subir la imagen',
+                'content': data.errors
+            }, status=status.HTTP_400_BAD_REQUEST)

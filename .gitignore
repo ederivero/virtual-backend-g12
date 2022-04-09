@@ -2,3 +2,7 @@ entorno_django/
 __pycache__/
 entorno_flask/
 .env
+# Archivos de imagenes
+*.jpg
+*.jpeg
+*.png
