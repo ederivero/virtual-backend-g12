@@ -54,6 +54,14 @@ class Tareas(models.Model):
     # En Django se puede utilizar las relaciones one-to-one, one-to-many o many-to-many para crear las relaciones entre las tablas, aca ya no es necesario usar las relationships porque ya estan integradas dentro de la relacion
     etiquetas = models.ManyToManyField(to=Etiqueta, related_name='tareas')
 
+    # ImageField sirve para guardar la ubicacion en donde se almacera mi imagen en el servidor
+    # https://docs.djangoproject.com/en/4.0/ref/models/fields/#imagefield
+    foto = models.ImageField(
+        # servira para indicar donde se guarda la imagen y si no existe, creara la carpeta
+        upload_to='multimedia',
+        null=True
+    )
+
     class Meta:
         db_table = 'tareas'
 
