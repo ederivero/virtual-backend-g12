@@ -127,16 +127,30 @@ class ArchivosApiView(CreateAPIView):
     def post(self, request: Request):
         # para ingresar a los archivos provenientes del form-data usamos el .FILES
         print(request.FILES)
+        # validar que en base al query params modelo se guarde en la determinada carpeta, si no hay ningun modelo entonces guardarlo afuera (dentro de imagenes)
+        queryParams = request.query_params
+        carpetaDestino = queryParams.get('carpeta')
+
         data = self.serializer_class(data=request.FILES)
         if data.is_valid():
             print(type(data.validated_data.get('archivo')))
             # https://docs.djangoproject.com/es/4.0/_modules/django/core/files/uploadedfile/
             archivo: InMemoryUploadedFile = data.validated_data.get('archivo')
-            print(archivo.name)
+            print(archivo.size)
+            # solamente subir imagenes de hasta 5Mb
+            # 5 (bytes) * 1024 >  (kb) * 1024 > (Mb)
+            # byte      kb     mb
+            # 5     * 1024 * 1024
+            if archivo.size > (5 * 1024 * 1024):
+                return Response(data={
+                    'message': 'Archivo muy grande, no puede ser mas de 5Mb'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
             # https://docs.djangoproject.com/en/4.0/topics/files/#storage-objects
             # el metodo read() sirve para leer el archivo PEEERO la lectura hara que tambien se elimine de la memoria temporal por ende no se puede llamar dos o mas veces a este metodo ya que la segunda ya no tendremos archivo que mostrar
             resultado = default_storage.save(
-                'imagenes/'+archivo.name, ContentFile(archivo.read()))
+                # usar un operador ternario para que si es que la carpetaDestino no es None ponerla caso
+                (carpetaDestino+'/' if carpetaDestino is not None else '') + archivo.name, ContentFile(archivo.read()))
 
             print(resultado)
             return Response(data={

@@ -15,6 +15,9 @@ python manage.py sqlmigrate NOMBRE_APP NUMERO_MIGRACION > mostrara el SQL de la 
 
 python manage.py shell > inicial un Interfaz de comandos de python pero importando todas las librerias que utiliza django
 
+python manage.py flush > resetea toda la base de datos y elimina toda la informacion de todas las tablas, reinicia los indices de los autoincrementables y la vuelve a un estado inicial
+
+
 https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations
 NOTA:
 python manage.py migrate NOMBRE_APP NUMERO_MIGRACION > efectuar dicha migracion o se puede revertir hasta la migracion seleccionada (todas las migraciones efectuadas queden sin efecto) si queremos revetir absolutamente todas las migraciones podemos colocar en NUMERO_MIGRACION zero, LA TABLA DJANGO_MIGRATIONS NUNCA SE TOCA 
