@@ -1,0 +1,7 @@
+Para ver la lista completa de comandos : https://www.postgresql.org/docs/current/app-psql.html
+
+psql -U USER  -h HOST -d DATABASE -p PORT > conectarse a un servidor externo
+
+\l > lista todas las bd de mi servidor
+\c DATABASE_NAME > cambiara a la bd escrita, si no existe lanzara un error
+\q > termina la sesion en el PSQL
