@@ -22,3 +22,7 @@ python manage.py test > corre todos los test definidos en los archivos tests.py 
 https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations
 NOTA:
 python manage.py migrate NOMBRE_APP NUMERO_MIGRACION > efectuar dicha migracion o se puede revertir hasta la migracion seleccionada (todas las migraciones efectuadas queden sin efecto) si queremos revetir absolutamente todas las migraciones podemos colocar en NUMERO_MIGRACION zero, LA TABLA DJANGO_MIGRATIONS NUNCA SE TOCA 
+
+
+
+No se puede crear aplicaciones con los nombres de las aplicaciones de Django: auth, contenttypes, message, users, admin, sessions, staticfiles
