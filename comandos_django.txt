@@ -19,9 +19,12 @@ python manage.py flush > resetea toda la base de datos y elimina toda la informa
 
 python manage.py test > corre todos los test definidos en los archivos tests.py de cada aplicacion ademas crea una base de datos de prueba para los test y adicionalmente se puede colocar -v o --verbosity que servira para indicar el grado de definicion de la ejecucion de los tests siendo 0 el mas corto y 3 el mas explicito, ademas se puede agregar el nombre de la aplicacion para que solo se corra esos tests y mas a detalle poner el nombre del archivo ademas se puede poner la clase hasta colocar el nombre de que unico test se desea correr dentro de la clase
 
+python manage.py createsuperuser > crea un superusuario para que pueda utilizado en el panel administrativo
+
 https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations
 NOTA:
 python manage.py migrate NOMBRE_APP NUMERO_MIGRACION > efectuar dicha migracion o se puede revertir hasta la migracion seleccionada (todas las migraciones efectuadas queden sin efecto) si queremos revetir absolutamente todas las migraciones podemos colocar en NUMERO_MIGRACION zero, LA TABLA DJANGO_MIGRATIONS NUNCA SE TOCA 
+
 
 
 
