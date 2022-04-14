@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'fact_electr',
-    'menu'
+    'menu',
+    'autorizacion'
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# sirve para definir cuando modificamos el contenido del modelo auth_user indicar ahora a cual tiene que hacer caso
+AUTH_USER_MODEL = 'autorizacion.Usuario'
