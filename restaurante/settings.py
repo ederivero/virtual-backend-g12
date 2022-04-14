@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from os import environ
 from dotenv import load_dotenv
@@ -136,3 +137,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # sirve para definir cuando modificamos el contenido del modelo auth_user indicar ahora a cual tiene que hacer caso
 AUTH_USER_MODEL = 'autorizacion.Usuario'
+
+# sirve para toda la configuracion de nuestro DjangoRestFramework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': {
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    }
+}
+
+# sirve para modificar las configuraciones iniciales de simplejwt
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1)
+}
