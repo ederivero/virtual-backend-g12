@@ -1,6 +1,6 @@
 from .models import Plato, Stock
 from rest_framework.generics import ListCreateAPIView
-from .serializers import PlatoSerializer, StockSerializer
+from .serializers import PedidoSerializer, PlatoSerializer, StockSerializer
 from rest_framework.permissions import (AllowAny,  # sirve para que el controlador sea publico (no se necesite una token)
                                         # Los controladores soliciten una token de acceso
                                         IsAuthenticated,
@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from cloudinary import CloudinaryImage
 from .permissions import SoloAdminPuedeEscribir
+from fact_electr.models import Pedido, DetallePedido
 
 
 class PlatoApiView(ListCreateAPIView):
@@ -38,3 +39,12 @@ class StockApiView(ListCreateAPIView):
     serializer_class = StockSerializer
     queryset = Stock.objects.all()
     permission_classes = [IsAuthenticated, SoloAdminPuedeEscribir]
+
+
+class PedidoApiView(ListCreateAPIView):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
+    permission_classes = [IsAuthenticated, SoloMozoPuedeEscribir]
+
+    def post(self, request: Request):
+        pass
