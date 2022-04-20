@@ -40,3 +40,11 @@ class SoloAdminPuedeEscribir(BasePermission):
         # return True if request.method in SAFE_METHODS else request.user.rol == 'ADMINISTRADOR'
 
         # return request.user.rol == 'ADMINISTRADOR'
+
+
+class SoloMozoPuedeEscribir(BasePermission):
+    def has_permission(self, request: Request, view):
+        if request.method == SAFE_METHODS:
+            return True
+        else:
+            return request.user.rol == 'MOZO'

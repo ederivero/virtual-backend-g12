@@ -13,8 +13,9 @@ from rest_framework.permissions import (AllowAny,  # sirve para que el controlad
 from rest_framework.response import Response
 from rest_framework.request import Request
 from cloudinary import CloudinaryImage
-from .permissions import SoloAdminPuedeEscribir
+from .permissions import SoloAdminPuedeEscribir, SoloMozoPuedeEscribir
 from fact_electr.models import Pedido, DetallePedido
+from rest_framework import status
 
 
 class PlatoApiView(ListCreateAPIView):
@@ -47,4 +48,10 @@ class PedidoApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, SoloMozoPuedeEscribir]
 
     def post(self, request: Request):
-        pass
+        print(request.user)
+        # Le agrego al body el usuarioId proveniente de la autenticacion de la token
+        request.data['usuarioId'] = request.user.id
+        data = self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+        data.save()
+        return Response(data=data.data, status=status.HTTP_201_CREATED)
