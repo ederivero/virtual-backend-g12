@@ -1,6 +1,9 @@
 from .models import Plato, Stock
-from rest_framework.generics import ListCreateAPIView
-from .serializers import PedidoSerializer, PlatoSerializer, StockSerializer
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
+from .serializers import (PedidoSerializer,
+                          PlatoSerializer,
+                          StockSerializer,
+                          AgregarDetallePedidoSerializer)
 from rest_framework.permissions import (AllowAny,  # sirve para que el controlador sea publico (no se necesite una token)
                                         # Los controladores soliciten una token de acceso
                                         IsAuthenticated,
@@ -16,6 +19,7 @@ from cloudinary import CloudinaryImage
 from .permissions import SoloAdminPuedeEscribir, SoloMozoPuedeEscribir
 from fact_electr.models import Pedido, DetallePedido
 from rest_framework import status
+from django.utils import timezone
 
 
 class PlatoApiView(ListCreateAPIView):
@@ -55,3 +59,30 @@ class PedidoApiView(ListCreateAPIView):
         data.is_valid(raise_exception=True)
         data.save()
         return Response(data=data.data, status=status.HTTP_201_CREATED)
+
+
+class AgregarDetallePedidoApiView(CreateAPIView):
+    queryset = DetallePedido.objects.all()
+    serializer_class = AgregarDetallePedidoSerializer
+
+    def post(self, request: Request):
+        # 1. valido la data con el serializer
+        data = self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+        # 2. verifico que tenga esa cantidad de productos en stock
+        # SELECT * FROM stocks WHERE fecha = '...' AND plato_id = '...';
+        stock = Stock.objects.filter(fecha=timezone.now(),
+                                     platoId=data.validated_data.get('platoId')).first()
+        print(stock)
+        if stock is None:
+            return Response(data={'message': 'No hay stock para ese producto para el dia de hoy'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        # informacion que me envia el front
+        # {
+        #   "cantidad": 2,
+        #   "plato": 1,
+        #   "pedido_id": 2
+        # }
+        # verificar que en el stock este en base al dia de hoy esa cantidad
+        # 3. agrego el detalle con su respectivo pedido
+        return Response(data={'message': 'Detalle agregado exitosamente'})

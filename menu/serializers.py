@@ -20,3 +20,9 @@ class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Pedido
+
+
+class AgregarDetallePedidoSerializer(serializers.Serializer):
+    cantidad = serializers.IntegerField(min_value=1)
+    pedidoId = serializers.IntegerField(min_value=1)
+    platoId = serializers.IntegerField(min_value=1)
