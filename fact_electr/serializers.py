@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import Comprobante
 
 
 class GenerarComprobanteSerializer(serializers.Serializer):
@@ -10,3 +11,9 @@ class GenerarComprobanteSerializer(serializers.Serializer):
     numero_documento = serializers.CharField(required=False)
 
     pedido_id = serializers.IntegerField()
+
+
+class ComprobanteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comprobante
+        fields = '__all__'

@@ -177,4 +177,17 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
     respuestaNubefact = requests.post(
         url_nubefact, headers=headers_nubefact, json=comprobante_body)
 
-    print(respuestaNubefact.json())
+    if respuestaNubefact.json().get('errors'):
+        raise Exception(respuestaNubefact.json().get('errors'))
+
+    else:
+        nuevoComprobante = Comprobante(
+            serie=serie,
+            numero=numero,
+            pdf=respuestaNubefact.json().get('enlace_del_pdf'),
+            cdr=respuestaNubefact.json().get('enlace_del_cdr'),
+            xml=respuestaNubefact.json().get('enlace_del_xml'),
+            tipo=tipo,
+            pedido=pedido)
+        nuevoComprobante.save()
+        return nuevoComprobante
