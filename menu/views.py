@@ -35,10 +35,10 @@ class PlatoApiView(ListCreateAPIView):
         # hacer una iteracion para modificar la foto de cada plato y devolver el link de la foto
         print(data.data[1].get('foto'))
         # del contenido de la foto solamente extraer el nombre del archivo o si esta en una carpeta extraer la carpeta y el archivo
-        link = CloudinaryImage(
-            'plato/u3aj7qh0dtmy73yanv5j.jpg').image(secure=True)
+        # link = CloudinaryImage(
+        #     'plato/u3aj7qh0dtmy73yanv5j.jpg').image(secure=True)
 
-        print(link)
+        # print(link)
         return Response(data=data.data)
 
 

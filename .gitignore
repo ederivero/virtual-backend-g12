@@ -7,3 +7,6 @@ entorno_flask/
 *.jpeg
 *.png
 *.gif
+
+# Archivos Estaticos de Django
+static_files/

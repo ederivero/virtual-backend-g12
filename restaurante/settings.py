@@ -36,7 +36,8 @@ SECRET_KEY = 'django-insecure-o6eowq^rep5$^*zyz116t8o_c34$&^3j%qm1$rtu3pfe%y-)c7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Host que van a poder levantar la API
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -48,8 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Librerias
     'rest_framework',
     'cloudinary',
+    'corsheaders',
+    # Aplicaciones
     'fact_electr',
     'menu',
     'autorizacion',
@@ -57,7 +61,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Agregar el middleware de los cors hasta antes del CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -166,3 +173,23 @@ cloudinary.config(
     api_key=environ.get('CLOUDINARY_API_KEY'),
     api_secret=environ.get('CLOUDINARY_SECRET')
 )
+
+# http://whitenoise.evans.io/en/stable/
+# Sirve para indicar que jalara los estilos de los archivos estaticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Para indicar donde se guardaran los archivos staticos (css, js, html) usados por DRF, y el panel administrativo
+# se usa para cuando corramos el comando 'python manage.py collectstatic'
+STATIC_ROOT = BASE_DIR / 'static_files'
+
+
+# Permitiras todos los origenes (https://mipagina.com http://fraudes.com)
+# https://pypi.org/project/django-cors-headers/
+# CORS_ORIGIN_ALLOW_ALL = True
+# son los origines permitidos, si queremos usar todos usaremos CORS_ORIGIN_ALLOW_ALL
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:5500',
+                        'https://mifront.netlify.app']  # http:misjackers.net
+# son los methodos permitidos, por defecto son todos
+CORS_ALLOWED_METHODS = ['GET', 'POST']  # no podra > PUT | DELETE
+# son la cabeceras permitidas , por defecto son todas
+CORS_ALLOWED_HEADERS = ['content-type', 'authorization', 'origin']

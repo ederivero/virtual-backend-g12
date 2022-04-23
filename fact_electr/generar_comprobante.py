@@ -9,6 +9,21 @@ from os import environ
 def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_documento: str, pedido_id: int):
     """Sirve para generar un comprobante electronico ya sea Factura, Boleta o Notas en base a un pedido, https://docs.google.com/document/d/1QWWSILBbjd4MDkJl7vCkL2RZvkPh0IC7Wa67BvoYIhA/edit#"""
     pedido = Pedido.objects.filter(id=pedido_id).first()
+    # Forma haciendo una segunda consulta a la tabla comprobantes
+    validacionComprobante = Comprobante.objects.filter(
+        pedido=pedido.id).first()
+
+    if validacionComprobante is not None:
+        raise Exception('Este pedido ya tiene un comprobante')
+
+    # Forma usando los related names
+    # try:
+    #     if pedido.comprobante is not None:
+    #         raise Exception('Este pedido ya tiene un comprobante')
+
+    # except Pedido.comprobante.RelatedObjectDoesNotExist:
+    #     pass
+
     if pedido is None:
         raise Exception('Pedido no existe')
 
