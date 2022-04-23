@@ -1,5 +1,7 @@
+from datetime import datetime
 import requests
-from .models import Comprobante, Pedido
+from menu.models import Plato, Stock
+from .models import Comprobante, DetallePedido, Pedido
 from django.db import connection
 from os import environ
 
@@ -65,6 +67,7 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
             else:
                 cliente_denominacion = respuesta_apiperu.json().get(
                     'data').get('nombre_o_razon_social')
+                cliente_direccion = respuesta_apiperu.json().get('data').get('direccion_completa')
 
         elif tipo_documento == 'DNI':
             respuesta_apiperu = requests.get("https://apiperu.dev/api/dni/"+numero_documento,
@@ -74,3 +77,100 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
                 raise Exception('Datos del cliente no validos')
             else:
                 cliente_denominacion = respuesta_apiperu.json().get('data').get('nombre_completo')
+                cliente_direccion = ''
+
+    cliente_email = 'ederiveroman@gmail.com'
+    fecha_de_emision = datetime.now().strftime('%d-%m-%Y')
+    moneda = 1
+    porcentaje_de_igv = 18.00
+
+    # valor total de la venta (INC IGV)
+    total = float(pedido.total)
+
+    # el valor sin el IGV (la base imponible)
+    total_gravada = total / 1.18
+
+    # el valor del IGV de la venta
+    total_igv = total - total_gravada
+    enviar_automaticamente_a_la_sunat = True
+    enviar_automaticamente_al_cliente = True
+    formato_de_pdf = "TICKET"  # A4 | A5 | TICKET
+
+    detalle_pedido: list[DetallePedido] = pedido.detalle_pedidos.all()
+
+    # https://www.gob.pe/702-depositar-detracciones-a-la-sunat
+    detraccion = False
+
+    items = []
+    for detalle in detalle_pedido:
+        # Extraigo el stock de ese detalle
+        stock: Stock = detalle.stockId
+        # Extraigo el plato de ese stock
+        plato: Plato = stock.platoId
+
+        unidad_de_medida = "NIU"
+        codigo = plato.id
+        descripcion = plato.nombre
+        cantidad = detalle.cantidad
+        # el precio del plato con IGV
+        precio_unitario = float(stock.precio_diario)
+        # el precio del plato sin IGV
+        valor_unitario = precio_unitario / 1.18
+
+        subtotal = valor_unitario * cantidad
+        tipo_de_igv = 1
+        igv = subtotal * 0.18
+        total_producto = precio_unitario * cantidad
+
+        item = {
+            'unidad_de_medida': unidad_de_medida,
+            'codigo': codigo,
+            'descripcion': descripcion,
+            'cantidad': cantidad,
+            'valor_unitario': valor_unitario,
+            'subtotal': subtotal,
+            'tipo_de_igv': tipo_de_igv,
+            'igv': igv,
+            'total_producto': total_producto,
+            'anticipo_regularizacion': False
+        }
+
+        items.append(item)
+
+    comprobante_body = {
+        'operacion': operacion,
+        'tipo_de_comprobante': tipo_de_comprobante,
+        'serie': serie,
+        'numero': numero,
+        'sunat_trasaction': sunat_transaction,
+        'cliente_tipo_de_documento': cliente_tipo_de_documento,
+        'cliente_numero_de_documento': cliente_numero_de_documento,
+        'cliente_denominacion': cliente_denominacion,
+        'cliente_direccion': cliente_direccion,
+        'cliente_email': cliente_email,
+        'fecha_de_emision': fecha_de_emision,
+        'moneda': moneda,
+        'porcentaje_de_igv': porcentaje_de_igv,
+        'total_gravada': total_gravada,
+        'total_igv': total_igv,
+        'total': total,
+        'detraccion': detraccion,
+        'observaciones': '',
+        'enviar_automaticamente_a_la_sunat': enviar_automaticamente_a_la_sunat,
+        'enviar_automaticamente_al_cliente': enviar_automaticamente_al_cliente,
+        'medio_de_pago': 'EFECTIVO',
+        'formato_de_pdf': formato_de_pdf,
+        'items': items
+    }
+
+    url_nubefact = environ.get('NUBEFACT_URL')
+
+    headers_nubefact = {
+        'Authorization': environ.get('NUBEFACT_TOKEN'),
+        'Content-Type': 'application/json'
+    }
+
+    respuestaNubefact = requests.post(
+        url_nubefact, headers=headers_nubefact, json=comprobante_body)
+
+    print(respuestaNubefact.json())
