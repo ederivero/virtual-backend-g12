@@ -1,10 +1,11 @@
 from rest_framework.generics import CreateAPIView
 from .generar_comprobante import generar_comprobante
 from rest_framework.response import Response
+from .serializers import GenerarComprobanteSerializer
 
 
-class GenerarComprobante(CreateAPIView):
-    serializer_class = ''  # acepten todos los parametros requeridos de mi generar_comprobante
+class GenerarComprobanteApiView(CreateAPIView):
+    serializer_class = GenerarComprobanteSerializer
 
     def post(self, request):
         data = self.serializer_class(data=request.data)

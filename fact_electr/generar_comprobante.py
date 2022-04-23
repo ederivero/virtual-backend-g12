@@ -55,12 +55,16 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
         cliente_numero_de_documento = None
 
     else:
-        cliente_tipo_de_documento = tipo_documento
+        if tipo_documento == 'RUC':
+            cliente_tipo_de_documento = 6
+        elif tipo_documento == 'DNI':
+            cliente_tipo_de_documento = 1
+
         cliente_numero_de_documento = numero_documento
 
         if tipo_documento == 'RUC':
             respuesta_apiperu = requests.get("https://apiperu.dev/api/ruc/"+numero_documento,
-                                             headers={'Authorization': 'Bearer'+environ.get('APIPERU_TOKEN')})
+                                             headers={'Authorization': 'Bearer '+environ.get('APIPERU_TOKEN')})
 
             if respuesta_apiperu.json().get('success') == False:
                 raise Exception('Datos del cliente no validos')
@@ -71,7 +75,7 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
 
         elif tipo_documento == 'DNI':
             respuesta_apiperu = requests.get("https://apiperu.dev/api/dni/"+numero_documento,
-                                             headers={'Authorization': 'Bearer'+environ.get('APIPERU_TOKEN')})
+                                             headers={'Authorization': 'Bearer '+environ.get('APIPERU_TOKEN')})
 
             if respuesta_apiperu.json().get('success') == False:
                 raise Exception('Datos del cliente no validos')
@@ -128,10 +132,11 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
             'descripcion': descripcion,
             'cantidad': cantidad,
             'valor_unitario': valor_unitario,
+            'precio_unitario': precio_unitario,
             'subtotal': subtotal,
             'tipo_de_igv': tipo_de_igv,
             'igv': igv,
-            'total_producto': total_producto,
+            'total': total_producto,
             'anticipo_regularizacion': False
         }
 
@@ -162,7 +167,6 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
         'formato_de_pdf': formato_de_pdf,
         'items': items
     }
-
     url_nubefact = environ.get('NUBEFACT_URL')
 
     headers_nubefact = {

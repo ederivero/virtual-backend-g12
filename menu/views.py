@@ -71,6 +71,7 @@ class PedidoApiView(ListCreateAPIView):
 class AgregarDetallePedidoApiView(CreateAPIView):
     queryset = DetallePedido.objects.all()
     serializer_class = AgregarDetallePedidoSerializer
+    permission_classes = [IsAuthenticated, SoloMozoPuedeEscribir]
 
     def post(self, request: Request):
         # 1. valido la data con el serializer
