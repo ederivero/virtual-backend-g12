@@ -1,0 +1,11 @@
+npm init --yes > crea el archivo package.json con toda la configuracion por defecto
+
+npm install libreria > instala la libreria
+
+npm uninstall libreria > desinstala la libreria
+
+npm install libreria@@1.0.0 > instala la libreria pero en una version en especifico
+
+npm cache clean > limpia la cache de mi npm 
+
+npm <comando> --force > forzara la ejecucion de ese comando
