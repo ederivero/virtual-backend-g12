@@ -17,7 +17,8 @@ model Usuario {
   password String
   rol      USUARIO_ROL @default(CLIENTE)
   validado Boolean     @default(false)
-  pedidos  Pedido[]
+
+  pedidos Pedido[]
 
   // Modificar el nombre de la tabla en la base de datos, si no se le coloca se creara con el nombre del modelo
   @@map("usuarios")
@@ -30,6 +31,8 @@ model Producto {
   unidadMedida UM_PRODUCTO        @map("unidad_medida")
   categoria    CATEGORIA_PRODUCTO
 
+  detallePedidos DetallePedido[]
+
   @@map("productos")
 }
 
@@ -39,8 +42,26 @@ model Pedido {
   total     Float
   estado    PEDIDO_ESTADO
   processId String?       @map("process_id")
-  clienteId Int
+  clienteId Int           @map("cliente_id")
   usuario   Usuario       @relation(fields: [clienteId], references: [id])
+
+  detallePedidos DetallePedido[]
+
+  @@map("pedidos")
+}
+
+model DetallePedido {
+  id           Int         @id @unique @default(autoincrement())
+  cantidad     Float
+  subTotal     Float       @map("sub_total")
+  unidadMedida UM_PRODUCTO
+  productoId   Int         @map("producto_id")
+  pedidoId     Int         @map("pedido_id")
+
+  producto Producto @relation(fields: [productoId], references: [id])
+  pedido   Pedido   @relation(fields: [pedidoId], references: [id])
+
+  @@map("detalle_pedidos")
 }
 
 enum PEDIDO_ESTADO {

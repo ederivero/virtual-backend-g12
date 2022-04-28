@@ -12,5 +12,8 @@
   "devDependencies": {
     "nodemon": "^2.0.15",
     "prisma": "^3.13.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.13.0"
   }
 }
