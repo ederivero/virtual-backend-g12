@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id       Int         @id @unique @default(autoincrement())
+  nombre   String? // al poner '?' indicare que el campo puede contener valores nulos
+  email    String      @unique
+  password String
+  rol      USUARIO_ROL @default(CLIENTE)
+  validado Boolean     @default(false)
+  pedidos  Pedido[]
+
+  // Modificar el nombre de la tabla en la base de datos, si no se le coloca se creara con el nombre del modelo
+  @@map("usuarios")
+}
+
+model Producto {
+  id           Int                @id @unique @default(autoincrement())
+  nombre       String
+  precio       Float
+  unidadMedida UM_PRODUCTO        @map("unidad_medida")
+  categoria    CATEGORIA_PRODUCTO
+
+  @@map("productos")
+}
+
+model Pedido {
+  id         Int           @id @unique @default(autoincrement())
+  fecha      DateTime      @db.Date // Date
+  total      Float
+  estado     PEDIDO_ESTADO
+  process_id String?
+  clienteId  Int
+  cliente    Usuario       @relation(fields: [clienteId], references: [id])
+}
+
+enum PEDIDO_ESTADO {
+  CREADO
+  ACEPTADO
+  PAGADO
+  ERROR
+}
+
+enum USUARIO_ROL {
+  ADMINISTRADOR
+  CLIENTE
+}
+
+enum UM_PRODUCTO {
+  KG
+  UNIDAD
+}
+
+enum CATEGORIA_PRODUCTO {
+  VERDURA
+  FRUTA
+  ELECTRODOMESTICO
+  LIMPIEZA
+  OTROS
+}
