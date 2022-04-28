@@ -34,13 +34,13 @@ model Producto {
 }
 
 model Pedido {
-  id         Int           @id @unique @default(autoincrement())
-  fecha      DateTime      @db.Date // Date
-  total      Float
-  estado     PEDIDO_ESTADO
-  process_id String?
-  clienteId  Int
-  cliente    Usuario       @relation(fields: [clienteId], references: [id])
+  id        Int           @id @unique @default(autoincrement())
+  fecha     DateTime      @db.Date // Date
+  total     Float
+  estado    PEDIDO_ESTADO
+  processId String?       @map("process_id")
+  clienteId Int
+  usuario   Usuario       @relation(fields: [clienteId], references: [id])
 }
 
 enum PEDIDO_ESTADO {
