@@ -11,8 +11,8 @@ Hola! 👋🏻 las ramas están organizadas por semana, es decir **CADA RAMA SER
 - Semana 03: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana03">semana03</a>
 - Semana 04: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana04">semana04</a>
 - Semana 04 - Front: Frontend del proyecto de la "_semana 04_" <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana04-front">semana04-front</a>
-- Semana 05: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana05">semana05</a>
-- Semana 06: Esta semana se complementa con la "_semana 05_"
+- Semana 05: Esta semana se complementa con la "_semana 04_"
+- Semana 06: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana06">semana06</a>
 - Semana 07: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana07">semana07</a>
 - Semana 08: Esta semana se complementa con la "_semana 07_"
 - Semana 09: <a href="https://github.com/ederivero/virtual-backend-g12/tree/semana09">semana09</a>
