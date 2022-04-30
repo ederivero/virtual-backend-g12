@@ -16,6 +16,8 @@
     "prisma": "^3.13.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.13.0"
+    "@prisma/client": "^3.13.0",
+    "bcrypt": "^5.0.1",
+    "validator": "^13.7.0"
   }
 }

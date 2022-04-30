@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import { productosRouter } from "./routes/productos.routes.js";
+import { usuarioRouter } from "./routes/usuarios.routes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 
 // agregar un bloque de rutas definidas en otro archivo
 app.use(productosRouter);
+app.use(usuarioRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo exitosamente en el puerto ${PORT}`);
