@@ -3,6 +3,7 @@ import { usuarioRequestDTO, loginRequestDTO } from "../dtos/usuarios.dto.js";
 import { hashSync, compareSync } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { enviarCorreoValidacion } from "../utils/sendMail.js";
+import cryptojs from "crypto-js";
 
 export const crearUsuario = async (req, res) => {
   try {
@@ -20,9 +21,18 @@ export const crearUsuario = async (req, res) => {
       },
     });
 
+    // Crear un texto encriptado
+    const hash = cryptojs.AES.encrypt(
+      JSON.stringify({
+        nombre: nuevoUsuario.nombre,
+        email: nuevoUsuario.email,
+      }),
+      process.env.LLAVE_ENCRIPTACION
+    ).toString();
+
     await enviarCorreoValidacion({
       destinatario: nuevoUsuario.email,
-      hash: "123123123",
+      hash,
     });
 
     return res.status(201).json(nuevoUsuario);
@@ -56,7 +66,7 @@ export const login = async (req, res) => {
           id: usuarioEncontrado.id,
           mensaje: "API de Minimarket",
         },
-        "asdfasdflkñjasdfjlkñasdfñjkl",
+        process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
       // el expiresIn recibe un numero (sera expresado en segundo) y si le pasamos un string:
@@ -82,4 +92,68 @@ export const login = async (req, res) => {
       });
     }
   }
+};
+
+export const confirmarCuenta = async (req, res) => {
+  // TODO crear el DTO de la confirmacion de la cuenta
+  // const data = confirmarCuentaRequestDTO(req.body)
+  try {
+    const data = req.body;
+    // aca desencripto el hash con la misma contraseña que use para encriptar
+    const informacion = JSON.parse(
+      cryptojs.AES.decrypt(data.hash, process.env.LLAVE_ENCRIPTACION).toString(
+        cryptojs.enc.Utf8
+      )
+    );
+
+    console.log(informacion);
+
+    // De acuerdo a esa informacion :
+    // 1. buscar el usuario en la bd con su correo y que su "validado" sea false, si es true indicar que el usuario ya valido su cuenta (400)
+
+    // SELECT id FROM usuarios WHERE email = '...' and validado=false;
+    // findUnique > para hacer busquedas con columnas que son unique | indices de la tabla
+    // findFirst > me devolver la primera coincidencia con condicionales a cualquier columna sin que sea unique's
+    const usuarioEncontrado = await Prisma.usuario.findFirst({
+      where: {
+        email: informacion.email,
+        validado: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!usuarioEncontrado) {
+      throw new Error("El usuario ya fue validado");
+    }
+
+    // 2. actualizar el estado validado a true
+    // UPDATE usuarios SET validado=true WHERE id= '...';
+    await Prisma.usuario.update({
+      where: { id: usuarioEncontrado.id },
+      data: { validado: true },
+    });
+
+    return res.json({
+      message: "Cuenta validada correctamente",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        message: "Error al validar la cuenta",
+        content: error.message,
+      });
+    }
+  }
+};
+
+// controlador protegido (recibira una JWT)
+export const perfil = async (req, res) => {
+  console.log(req.user);
+
+  return res.json({
+    message: "Bienvenido",
+    content: req.user,
+  });
 };
