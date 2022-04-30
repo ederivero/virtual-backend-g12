@@ -1,6 +1,7 @@
 import { Prisma } from "../prisma.js";
 import { usuarioRequestDTO, loginRequestDTO } from "../dtos/usuarios.dto.js";
 import { hashSync, compareSync } from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
 
 export const crearUsuario = async (req, res) => {
   try {
@@ -44,8 +45,23 @@ export const login = async (req, res) => {
     // validar su password
     //              Welcome123!    askldjasdf0as9iudf09sdvcasiojhdvoasijfoais
     if (compareSync(data.password, usuarioEncontrado.password)) {
+      const token = jsonwebtoken.sign(
+        {
+          id: usuarioEncontrado.id,
+          mensaje: "API de Minimarket",
+        },
+        "asdfasdflkñjasdfjlkñasdfñjkl",
+        { expiresIn: "1h" }
+      );
+      // el expiresIn recibe un numero (sera expresado en segundo) y si le pasamos un string:
+      // '10' > 10 milisegundos
+      // '1 days' > 1 dia
+      // '1y' > 1 año
+      // '7d' > 7 dias
+
       return res.json({
         message: "Bienvenido",
+        content: token,
       });
     } else {
       // si no es la password emitire un error
