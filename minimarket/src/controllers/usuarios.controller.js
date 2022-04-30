@@ -2,6 +2,7 @@ import { Prisma } from "../prisma.js";
 import { usuarioRequestDTO, loginRequestDTO } from "../dtos/usuarios.dto.js";
 import { hashSync, compareSync } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
+import { enviarCorreoValidacion } from "../utils/sendMail.js";
 
 export const crearUsuario = async (req, res) => {
   try {
@@ -17,6 +18,11 @@ export const crearUsuario = async (req, res) => {
         rol: true,
         validado: true,
       },
+    });
+
+    await enviarCorreoValidacion({
+      destinatario: nuevoUsuario.email,
+      hash: "123123123",
     });
 
     return res.status(201).json(nuevoUsuario);
