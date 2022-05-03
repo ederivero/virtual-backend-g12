@@ -1,4 +1,5 @@
 import express, { json } from "express";
+import { detallePedidoRouter } from "./routes/detallePedido.routes.js";
 import { pedidosRouter } from "./routes/pedidos.routes.js";
 import { productosRouter } from "./routes/productos.routes.js";
 import { usuarioRouter } from "./routes/usuarios.routes.js";
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 app.use(productosRouter);
 app.use(usuarioRouter);
 app.use(pedidosRouter);
+app.use(detallePedidoRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo exitosamente en el puerto ${PORT}`);
