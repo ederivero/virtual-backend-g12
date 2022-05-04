@@ -3,7 +3,6 @@ import prisma from "@prisma/client";
 
 export const crearDetallePedidoRequestDTO = ({
   cantidad,
-  subTotal,
   unidadMedida,
   productoId,
   pedidoId,
@@ -15,13 +14,6 @@ export const crearDetallePedidoRequestDTO = ({
     !validator.isNumeric(cantidad.toString())
   ) {
     errores.map("Cantidad debe ser un numero y es requerido");
-  }
-
-  if (
-    validator.isEmpty(subTotal.toString()) ||
-    !validator.isFloat(subTotal.toString())
-  ) {
-    errores.map("subTotal debe ser un flotante y es requerido");
   }
 
   if (
@@ -53,7 +45,6 @@ export const crearDetallePedidoRequestDTO = ({
   } else {
     return {
       cantidad,
-      subTotal,
       unidadMedida,
       productoId,
       pedidoId,
