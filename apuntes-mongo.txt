@@ -1,0 +1,4 @@
+db => mostrara en que base de datos estamos trabajando
+use NOMBRE_BD => nos moveremos a esa base de datos y si no existe la creara
+
+db.TABLA.insertOne({...}) => insertara un nuevo registro en esa coleccion (TABLA) en la bd y si no existe, creara esa TABLA
