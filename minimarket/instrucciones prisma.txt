@@ -1,2 +1,0 @@
-npx prisma init > crea la carpeta prisma con el schema en blanco para comenzar a llenar las tablas
-npx prisma migrate dev > creara una nueva migracion y nos pedira el nombre de la misma
