@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcryptjs from "bcryptjs";
 // Toda la configuracion que estamos haciendo es solamente a nivel de mongoose, osea si agregamos un usuario de frente a la bd no hara caso a ninguna de estas caracterisiticas
 
 const usuarioSchema = new mongoose.Schema({
@@ -19,10 +19,8 @@ const usuarioSchema = new mongoose.Schema({
   },
   password: {
     type: mongoose.Schema.Types.String,
-    set: (valorActual) => {
-      console.log(valorActual);
-      return "hola";
-    }, // sera una funcion que antes de guardarse en la base de datos se modificara su valor
+    set: (valorActual) => bcryptjs.hashSync(valorActual, 10), // sera una funcion que antes de guardarse en la base de datos se modificara su valor
+    // get: (valorActual) => "",
   },
 });
 
