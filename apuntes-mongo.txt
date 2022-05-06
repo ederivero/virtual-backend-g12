@@ -1,4 +1,10 @@
 db => mostrara en que base de datos estamos trabajando
 use NOMBRE_BD => nos moveremos a esa base de datos y si no existe la creara
-
+show dbs => mostrara todas las bases de datos de nuestro servidor
 db.TABLA.insertOne({...}) => insertara un nuevo registro en esa coleccion (TABLA) en la bd y si no existe, creara esa TABLA
+
+si quiero usar el like
+db.TABLA.find({ columna: /x/ }) => en cualquier parte de la columna estara la letra x
+db.TABLA.find({ columna: /^x/ }) => tiene que empezar con la letra x
+db.TABLA.find({ columna: /x$/ }) => tiene que terminar con la letra x
+https://www.mongodb.com/docs/manual/reference/operator/query/ => para mas informacion sobre los operadores a usar en las consultas en mongo
