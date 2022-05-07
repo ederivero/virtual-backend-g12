@@ -22,7 +22,7 @@ const libroSchema = new mongoose.Schema(
   {
     // https://mongoosejs.com/docs/guide.html#options
     // no podemos evitar usar el _id o un id personalizable en un schema principal (que no sea un subschema)
-    _id: false, // sirve para indicar que en este schema no se creara automaticamente el _id (primary key)
+    // _id: false, // sirve para indicar que en este schema no se creara automaticamente el _id (primary key)
     timestamps: {
       updatedAt: "fecha_actualizacion", // true > solo creara el updatedAt | string > creara esa columna pero con ese nombre
     }, // creara las columnas de auditoria (created_at y el updated_at)

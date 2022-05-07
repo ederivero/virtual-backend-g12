@@ -1,4 +1,6 @@
 import { libroRequestDTO } from "../dtos/libro.request.dto.js";
+import { Usuario } from "../models/usuarios.models.js";
+import mongoose from "mongoose";
 export const agregarLibro = async (req, res) => {
   // dto en el cual valido que me envie los campos para agregar un libro
   try {
@@ -20,4 +22,40 @@ export const agregarLibro = async (req, res) => {
       content: e.message,
     });
   }
+};
+
+export const listarLibros = (req, res) => {
+  // req.user > toda la data de nuestro usuario
+  return res.json({
+    message: "los libros son:",
+    content: req.user.libros,
+  });
+};
+
+// http://localhost:3000/libro/:_id
+export const devolverLibro = async (req, res) => {
+  const { _id: id_del_libro } = req.params;
+  // no puedo usar clausulas de condicion
+  // https://www.mongodb.com/docs/manual/reference/operator/projection/positional/#proj._S_
+  // usando las propiedades de la base de datos
+  const libroEncontrado = await Usuario.findOne(
+    {
+      _id: req.user._id, // id del usuario
+      "libros._id": id_del_libro, // id del libro
+    },
+    // con la proyeccion se le indica a mongodb que esta busqueda se tiene que realizar en un nivel mas 'adentro' porque libros es un arreglo y lo tendra q iterara y hacer la busqueda de ese libro, seria algo muuuy similar con depth en django
+    {
+      "libros.$": 1,
+    }
+  );
+
+  // forma tradicional en la cual se realiza en el lado del backend
+  const libro = req.user.libros.filter(
+    (libro) => libro._id.toString() === id_del_libro
+  );
+  return res.json({
+    message: "El libro es:",
+    content: libro,
+    content2: libroEncontrado,
+  });
 };
