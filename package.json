@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "dotenv -e .env -- nodemon ./src/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",    
+    "start:dev": "dotenv -e .env -- nodemon --legacy-watch ./src/index.js"
   },
   "repository": {
     "type": "git",

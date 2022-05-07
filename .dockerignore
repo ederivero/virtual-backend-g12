@@ -1,0 +1,5 @@
+# si hacemos la copia total de nuestro proyecto, entonces crearemos este archivo para indicarle que archivos no tiene que copiar
+node_modules/
+.env
+apuntes-mongo.txt
+Dockerfile

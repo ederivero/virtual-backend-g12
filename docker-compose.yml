@@ -1,0 +1,43 @@
+version: '3.8'
+
+# sirve para manejar uno o varios contenedores que interactuen entre si
+services:
+  api-librero:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:3000
+    # para que el contenido que este en el contenedor se base en una ubicacion de nuestra maquina
+    volumes:
+      # lo que tenga en la carpeta src localmente sera lo mismo y todos los cambios se haran en el contenedo en la ubicacion /app/src donde /app/ es el WORKDIR que definimos en el Dockerfile
+      - ./src:/app/src
+    depends_on:
+      # este contenedor dependera de otro contenedor para que al momento de inicializarse se iniciale primero los detallados en esta lista
+      - basededatos-mongo
+    # le indico que jaletodas las variables del archivo .env y las setee como variables de entorno, pero tiene que ser antes del environment sino la sobre escribira
+    env_file: .env
+    environment:
+      # variables seteadas para el contenedor (ya no se usa el archivo .env)
+      - MONGO_URL=mongodb://eduardo:Welcome123!@basededatos-mongo:27017
+      - DBNAME=librero
+
+  basededatos-mongo:
+    image: mongo:latest
+    ports:
+      # externo:interno
+      - 3000:27017
+    environment:
+        # son las variables que me da la imagen para poder acceder a esta base de datos desde afuera del contenedor
+      # yaml hay dos formas de declara un arreglo 
+      # al poner guiones estamos indicando que va a ser un array y entonces deberiamos de colocar para los environment puro string sin la necesidad de colocar (llave-valor) 
+      # - MONGO_INITDB_ROOT_USERNAME=eduardo
+      # - MONGO_INITDB_ROOT_PASSWORD=Welcome123!
+      # - MONGO_INITDB_DATABASE=librero
+
+      # en este formato las variables son representadas como JSON (llave-valor)
+      # { MONGO_INITDB_ROOT_USERNAME: "eduardo", ... }
+      MONGO_INITDB_ROOT_USERNAME: eduardo
+      MONGO_INITDB_ROOT_PASSWORD: Welcome123!
+      MONGO_INITDB_DATABASE: librero
+    
