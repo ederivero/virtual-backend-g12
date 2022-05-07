@@ -1,0 +1,13 @@
+NOTA: nombre_contenedor tambien puede ser los 3 primeros caracteres del ID
+docker build . --tag nombre_imagen => crea la imagen en nuestra maquina del proyecto actual (sin bd)
+docker images => mostrara el listado de todas las imagenes creadas
+docker run -it -p PUERTO_SALIENTE:PUERTO_INTERO nombre_imagen => levantara la imagen construida previamente
+docker run -d -p PUERTO_SALIENTE:PUERTO_INTERO nombre_imagen => levanta la imagen en background
+docker ps => mostrara la lista de los contenedores
+docker stop ID => detendra el contenedor ejecutandose en background
+
+docker-compose up --build => levantara nuestro compose con los diferentes contenedores registrados
+docker rm nombre_contenedor =>  elimina el contenedor NOTA: si eliminan el contenedor eliminaran tbn sus datos CUIDADO
+docker rmi nombre_contenedor => elimina la imagen (una imagen se crea cuando hacemos un nuevo build de nuestro contenedor)
+
+NOTA: No eliminar los contenedores ya que ahi si se pierde la bd y su contenido
