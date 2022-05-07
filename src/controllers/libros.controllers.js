@@ -1,6 +1,6 @@
 import { libroRequestDTO } from "../dtos/libro.request.dto.js";
 import { Usuario } from "../models/usuarios.models.js";
-import mongoose from "mongoose";
+
 export const agregarLibro = async (req, res) => {
   // dto en el cual valido que me envie los campos para agregar un libro
   try {
