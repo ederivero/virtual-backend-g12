@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import { usuariosRouter } from "./routes/usuarios.routes.js";
+import { libroRouter } from "./routes/libros.routes.js";
 
 const app = express();
 // https://www.npmjs.com/package/morgan
@@ -13,6 +14,7 @@ app.use(logger);
 app.use(express.json());
 
 app.use(usuariosRouter);
+app.use(libroRouter);
 
 const PORT = process.env.PORT ?? 3000;
 console.log(process.env.MONGO_URL);
